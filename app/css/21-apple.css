@@ -1,0 +1,1324 @@
+/**
+ * Apple-Stil (Beta 1.0)
+ *
+ * Ruhiger und flacher: Inhalte stehen auf dem Grund, gegliedert durch Abstand,
+ * Überschriften und Haarlinien. Gruppen nur dort, wo sie wie in den
+ * iPhone-Einstellungen Sinn ergeben – keine Kacheln in Kacheln.
+ * Glas nur für schwebende Elemente; mit html.glas-aus wird alles massiv.
+ * Das Planer-Raster bleibt bewusst unverändert.
+ */
+
+:root {
+  --bg: #08121f;
+  --surface: #101c2b;
+  --surface-2: #17263a;
+  --surface-3: #1f3049;
+  --line: rgba(150, 175, 205, 0.18);
+  --line-soft: rgba(150, 175, 205, 0.12);
+  --haar: rgba(150, 175, 205, 0.16);
+  --text: #f2f6fa;
+  --muted: #9aa9bb;
+  --faint: #7f8fa4;
+  --fill: rgba(120, 140, 165, 0.14);
+  --fill2: rgba(120, 140, 165, 0.22);
+  --gruppe: #101c2b;
+  --glas: rgba(22, 38, 58, 0.55);
+  --glas-dicht: rgba(10, 20, 33, 0.72);
+  --glas-sheet: rgba(20, 34, 52, 0.74);
+  --glasRand: rgba(255, 255, 255, 0.13);
+  --glasHi: rgba(255, 255, 255, 0.08);
+  --linse: rgba(255, 255, 255, 0.11);
+  --daumen: #3a4d65;
+  --feder: cubic-bezier(0.32, 0.72, 0, 1);
+  --glasblur: blur(30px) saturate(190%);
+}
+body.hell {
+  --bg: #f2f4f8;
+  --surface: #ffffff;
+  --surface-2: #e9edf3;
+  --surface-3: #dde4ee;
+  --line: rgba(60, 70, 90, 0.16);
+  --line-soft: rgba(60, 70, 90, 0.1);
+  --haar: rgba(60, 70, 90, 0.14);
+  --text: #0f1a26;
+  --muted: #586678;
+  --faint: #6b7889;
+  --fill: rgba(118, 128, 145, 0.12);
+  --fill2: rgba(118, 128, 145, 0.2);
+  --gruppe: #ffffff;
+  --glas: rgba(255, 255, 255, 0.68);
+  --glas-dicht: rgba(246, 248, 251, 0.78);
+  --glas-sheet: rgba(248, 250, 252, 0.84);
+  --glasRand: rgba(255, 255, 255, 0.9);
+  --linse: #ffffff;
+  --daumen: #ffffff;
+}
+/* Glas aus: dieselben Flächen, nur massiv und ohne Unschärfe */
+html.glas-aus {
+  --glasblur: none;
+  --glas: #132235;
+  --glas-dicht: #0b1726;
+  --glas-sheet: #101c2b;
+}
+html.glas-aus body.hell {
+  --glas: #ffffff;
+  --glas-dicht: #f7f8fb;
+  --glas-sheet: #ffffff;
+}
+html.glas-aus *,
+html.glas-aus *::before,
+html.glas-aus *::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html body {
+  background: var(--bg);
+}
+
+/* ---------- Kopf und große Überschrift ---------- */
+html body .topbar .savestate:not(.warn) {
+  opacity: 0 !important;
+}
+html body .hero .pagetitle,
+html body .pagetitle {
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
+}
+
+/* ---------- Abschnitte: kein Kasten, nur Überschrift und Abstand ---------- */
+html body .page:not(#page-planer) .asec {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 0 30px !important;
+  border-radius: 0 !important;
+}
+html body .page:not(#page-planer) .asec > h3,
+html body .page .asec > h3 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+  margin: 0 0 4px !important;
+}
+html body .asec > .sub {
+  font-size: 15px !important;
+  color: var(--muted) !important;
+  line-height: 1.4;
+  margin-bottom: 12px !important;
+}
+html body .hinweis {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+  color: var(--faint) !important;
+}
+html body .ah4,
+html body .h4 {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em !important;
+  color: var(--faint) !important;
+  margin: 26px 4px 8px !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+/* ---------- Kennzahlen: Zahlen auf dem Grund statt Kacheln ---------- */
+html body .page:not(#page-planer) .kpis {
+  gap: 0 !important;
+  border-top: 0.5px solid var(--haar);
+  margin: 6px 0 4px;
+}
+html body .page:not(#page-planer) .kpi {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 14px 12px 14px 0 !important;
+  border-bottom: 0.5px solid var(--haar) !important;
+}
+html body .kpi .kl {
+  font-size: 13px !important;
+  color: var(--faint) !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+html body .kpi .kv {
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text) !important;
+}
+html body .kpi.hero .kv {
+  font-size: 30px !important;
+  color: var(--text) !important;
+}
+html body .kpi .ks {
+  font-size: 12.5px !important;
+  color: var(--muted) !important;
+}
+
+/* ---------- Gruppen wie in den iPhone-Einstellungen ---------- */
+html body .grp {
+  background: var(--gruppe) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 14px !important;
+}
+html body .grp .grp,
+html body .esgrp .grp {
+  background: transparent !important;
+  padding: 0 !important;
+}
+html body .aline {
+  border-color: var(--haar) !important;
+}
+
+/* ---------- Eingaben ---------- */
+html body .field label,
+html body .lb,
+html body .sect > .lb {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--muted) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+html body input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+html body select,
+html body textarea {
+  background: var(--fill) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+  color: var(--text) !important;
+  font-size: 17px !important;
+  min-height: 46px;
+}
+html body input:focus,
+html body select:focus,
+html body textarea:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--accent) !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: var(--faint) !important;
+}
+
+/* ---------- Knöpfe ---------- */
+html body .btn {
+  min-height: 48px;
+  border-radius: 14px !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  background: var(--fill2) !important;
+  color: var(--text) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html body .btn.primary {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+html body .btn.gefahr,
+html body .mini.gefahr {
+  background: var(--rotT) !important;
+  color: var(--rot) !important;
+}
+html body .mini {
+  border-radius: 999px !important;
+  background: var(--fill) !important;
+  border: 0 !important;
+  color: var(--accent) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+html body .btn:active,
+html body .mini:active {
+  opacity: 0.7;
+  transform: none !important;
+}
+
+/* ---------- Segmente wie am iPhone ---------- */
+html body .seg {
+  background: var(--fill) !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  padding: 2px !important;
+  box-shadow: none !important;
+}
+html body .seg button {
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+  min-height: 34px;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body .seg:not(.mitpille) button[aria-pressed="true"] {
+  background: var(--daumen) !important;
+  font-weight: 600 !important;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.18),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.12) !important;
+}
+html body .seg.mitpille button[aria-pressed="true"] {
+  font-weight: 600 !important;
+}
+html body .seg .segpille {
+  background: var(--daumen) !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.18),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.12) !important;
+  transition:
+    transform 0.4s var(--feder),
+    width 0.4s var(--feder) !important;
+}
+html body .checks button {
+  background: var(--fill) !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+html body .checks button[aria-pressed="true"] {
+  background: var(--accT) !important;
+  color: var(--accent) !important;
+  box-shadow: inset 0 0 0 1.5px var(--accent) !important;
+}
+
+/* ---------- Untere Leiste: eine Glaskapsel ---------- */
+html body .tabbar {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0 !important;
+  left: 14px !important;
+  right: 14px !important;
+  height: 66px !important;
+  padding: 4px !important;
+  border-radius: 33px !important;
+  background: var(--glas) !important;
+  -webkit-backdrop-filter: var(--glasblur) !important;
+  backdrop-filter: var(--glasblur) !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 0 0 0.5px var(--glasRand),
+    inset 0 1px 0 var(--glasHi),
+    0 10px 30px rgba(0, 0, 0, 0.32) !important;
+  z-index: 52 !important;
+}
+body.hell .tabbar {
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    0 10px 30px rgba(20, 40, 70, 0.14) !important;
+}
+html body .tabbar .tbar {
+  display: contents !important;
+}
+html body .tabbar .tab,
+html body .tabbar .tabmehr {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 29px !important;
+  width: auto !important;
+  flex: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  color: var(--muted) !important;
+}
+html body .tabbar .tabmehr i {
+  display: block !important;
+}
+html body .tabbar .tab[aria-current="page"] {
+  color: var(--accent) !important;
+}
+html body .tabbar .mlinse,
+html body .tabbar .tabpille {
+  display: block !important;
+  position: absolute;
+  top: 4px !important;
+  bottom: 4px !important;
+  height: auto !important;
+  border-radius: 29px !important;
+  background: var(--linse) !important;
+  box-shadow: none !important;
+  transition:
+    transform 0.45s var(--feder),
+    width 0.45s var(--feder) !important;
+}
+html body .tabbar .mlinse ~ .tabpille {
+  display: none !important;
+}
+
+/* ---------- Fenster (Sheets) ---------- */
+html body #modal .back {
+  background: rgba(0, 0, 0, 0.42) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html body #modal .sheet {
+  background: var(--glas-sheet) !important;
+  -webkit-backdrop-filter: var(--glasblur) !important;
+  backdrop-filter: var(--glasblur) !important;
+  border: 0 !important;
+  box-shadow:
+    inset 0 0.5px 0 var(--glasRand),
+    0 -10px 40px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 28px 28px 0 0 !important;
+}
+html body #modal .sheet .grp {
+  background: var(--fill) !important;
+}
+html.glas-aus body #modal .sheet .grp {
+  background: var(--surface-2) !important;
+}
+body.hell #modal .sheet .grp {
+  background: #ffffff !important;
+}
+html body #modal .sheet > header h3 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em !important;
+}
+html body #modal .sheet > header .when {
+  font-size: 14px !important;
+  color: var(--muted) !important;
+}
+html body #modal .sheet .x {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  background: var(--fill2) !important;
+  color: var(--muted) !important;
+  border: 0 !important;
+  font-size: 13px !important;
+}
+html body #modal .sheet .grp input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html body #modal .sheet .grp select {
+  background: var(--fill) !important;
+}
+
+/* ---------- Menü (Mehr) ---------- */
+html body .drawer {
+  background: var(--glas-dicht) !important;
+  border: 0 !important;
+}
+html body .navlink {
+  border-radius: 10px !important;
+  font-weight: 500 !important;
+}
+
+/* ---------- Statistik: PDF-Knopf ---------- */
+.pdfknopf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 46px;
+  margin: 12px 0 4px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--fill);
+  color: var(--accent);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pdfknopf:active {
+  opacity: 0.7;
+}
+@media print {
+  .pdfknopf {
+    display: none !important;
+  }
+}
+
+/* ========== Provision ========== */
+#prov .pvkopf {
+  margin: 4px 0 8px;
+}
+.pveb {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+.pvlbl {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 22px 0 0;
+}
+.pvgross {
+  margin: 6px 0 0;
+  font-size: 58px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.pvgross small {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+.pvmeter {
+  position: relative;
+  margin: 22px 0 0;
+  padding-bottom: 18px;
+}
+.pvbahn {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--fill2);
+  overflow: hidden;
+}
+.pvbahn i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 1s var(--feder);
+}
+.pvmarke {
+  position: absolute;
+  top: -3px;
+  transform: translateX(-100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.pvmarke i {
+  width: 2px;
+  height: 10px;
+  border-radius: 1px;
+  background: var(--fill2);
+}
+.pvmarke.an i {
+  background: var(--accent);
+}
+.pvmarke em {
+  font-style: normal;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--faint);
+  margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.pvmarke.an em {
+  color: var(--accent);
+}
+.pvmeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--faint);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.pvh {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 34px 0 4px;
+}
+.pvliste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pvz {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--haar);
+}
+.pvz:last-child {
+  border-bottom: 0;
+}
+.pvz .pvzt {
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+}
+.pvz .pvzt small {
+  display: block;
+  font-size: 13px;
+  color: var(--faint);
+  margin-top: 2px;
+}
+.pvz b {
+  font-size: 17px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.pvz.minus b {
+  color: var(--rot);
+}
+.pvz.zwischen {
+  border-top: 0.5px solid var(--line);
+}
+.pvz.zwischen b,
+.pvz.zwischen .pvzt {
+  color: var(--text);
+  font-weight: 600;
+}
+.pvz.summe {
+  border-top: 1px solid var(--line);
+  min-height: 62px;
+}
+.pvz.summe .pvzt {
+  font-weight: 700;
+}
+.pvz.summe b {
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.pvz .pvsatz {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accT);
+  border-radius: 6px;
+  padding: 2px 7px;
+  margin-right: 10px;
+}
+.pvz.tippbar {
+  padding: 0;
+}
+.pvz.tippbar button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pvnote {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--faint);
+  margin: 8px 0 0;
+}
+.pvnote a {
+  color: var(--accent);
+}
+.pvwenn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+.pvrund {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--fill);
+  color: var(--accent);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+.pvrund:active {
+  opacity: 0.6;
+}
+.pvwmitte {
+  flex: 1;
+  text-align: center;
+}
+.pvwmitte b {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pvwmitte span {
+  font-size: 13px;
+  color: var(--faint);
+}
+.pvh.pvdetail {
+  margin-bottom: 8px;
+}
+/* Detailbereiche des Rechners als aufklappbare Zeilen */
+html body #prov .klappsec {
+  margin: 0 !important;
+  border-bottom: 0.5px solid var(--haar) !important;
+}
+html body #prov .klappkopf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+}
+html body #prov .klappkopf > span:first-child {
+  flex: 1;
+  text-align: left;
+}
+html body #prov .klappkopf .ksum {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 15px;
+}
+html body #prov .klappkopf .kp {
+  color: var(--faint);
+  font-weight: 400;
+  width: 18px;
+  text-align: center;
+}
+html body #prov .klappinhalt {
+  padding-bottom: 18px;
+}
+
+/* ========== Provision aufteilen (Fenster) ========== */
+.pa {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 6px;
+}
+.pakopf {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 17px;
+}
+.pakopf b {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.paskala {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--faint);
+}
+.paregler {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 32px;
+  margin: 6px 0 2px;
+  background: transparent;
+  --p: 100%;
+}
+.paregler::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--accent) var(--p), var(--fill2) var(--p));
+}
+.paregler::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--accent) var(--p), var(--fill2) var(--p));
+}
+.paregler::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -11px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.25),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06);
+}
+.paregler::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+.pachips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pachips button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  min-height: 36px;
+  background: var(--fill);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.pachips button[aria-pressed="true"] {
+  background: var(--accT);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+.pasumme {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 0.5px solid var(--line);
+  padding-top: 14px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.pasumme b {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pageld {
+  margin: -10px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ========== Einstellungen ========== */
+.es {
+  padding-bottom: 20px;
+}
+.es .esseite {
+  display: none;
+}
+.esich {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  min-height: 76px;
+  margin-top: 6px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--gruppe);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.esav {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: 19px;
+  font-weight: 600;
+}
+.esichtx {
+  flex: 1;
+  min-width: 0;
+}
+.esichtx b {
+  display: block;
+  font-size: 19px;
+  font-weight: 600;
+}
+.esichtx small {
+  font-size: 14px;
+  color: var(--muted);
+}
+.esgh {
+  font-size: 13px;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 30px 16px 7px;
+}
+.esfuss {
+  font-size: 13px;
+  line-height: 1.42;
+  color: var(--faint);
+  margin: 7px 16px 0;
+}
+.esgrp {
+  background: var(--gruppe);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.esgrp + .esgrp {
+  margin-top: 22px;
+}
+.esgrp.espad {
+  padding: 10px;
+}
+.esz {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 6px 16px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 17px;
+  text-align: left;
+  cursor: pointer;
+}
+.esz + .esz::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 0;
+  border-top: 0.5px solid var(--haar);
+}
+.esz:active:not(label) {
+  background: var(--fill);
+}
+.esz .eszt {
+  flex: 1;
+  min-width: 0;
+}
+.esz .eszt small {
+  display: block;
+  font-size: 13px;
+  color: var(--faint);
+  margin-top: 1px;
+}
+.esz em {
+  font-style: normal;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.esz .eschev {
+  flex: none;
+  color: var(--faint);
+}
+.esz.rot {
+  justify-content: center;
+  color: var(--rot);
+}
+.esz.rot .eszt {
+  flex: none;
+}
+.esz.eszhoch {
+  min-height: 64px;
+}
+.esneu {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.esmarke {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin: 40px 0 8px;
+  color: var(--faint);
+  font-size: 13px;
+  text-align: center;
+}
+.esmarke svg {
+  width: 36px;
+  height: 36px;
+}
+.esmarke b {
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+.esform {
+  padding: 6px 16px 16px;
+}
+.esform .field {
+  margin-top: 10px;
+}
+.esaktion {
+  margin-top: 22px;
+}
+.esaktion .btn {
+  width: 100%;
+}
+
+/* Schalter wie am iPhone */
+.ioswitch {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 51px;
+  height: 31px;
+  margin: 0;
+  border-radius: 16px;
+  background: var(--fill2);
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.ioswitch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.22),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.32s var(--feder);
+}
+.ioswitch:checked {
+  background: var(--accent);
+}
+.ioswitch:checked::after {
+  transform: translateX(20px);
+}
+.ioswitch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Segment mit gleitendem Daumen (Rolle, Thema) */
+.ioseg {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  height: 40px;
+  padding: 2px;
+  border-radius: 11px;
+  background: var(--fill);
+}
+.ioseg.klein {
+  height: 32px;
+  width: 168px;
+  flex: none;
+  border-radius: 9px;
+}
+.iosegdaumen {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc((100% - 4px) / var(--n));
+  border-radius: 9px;
+  background: var(--daumen);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.2),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.12);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform 0.4s var(--feder);
+}
+.ioseg.klein .iosegdaumen {
+  border-radius: 7px;
+}
+.ioseg button {
+  position: relative;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.25s;
+}
+.ioseg.klein button {
+  font-size: 13px;
+}
+.ioseg button[aria-pressed="true"] {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ---------- Unterseiten (schieben sich von rechts herein) ---------- */
+.unter {
+  position: fixed;
+  inset: 0;
+  z-index: 51;
+  background: var(--bg);
+  color: var(--text);
+  transform: translateX(100%);
+  transition:
+    transform 0.46s var(--feder),
+    opacity 0.46s;
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+.unter.auf {
+  transform: none;
+}
+.unter.drunter {
+  transform: translateX(-30%);
+  opacity: 0.5;
+}
+.unternav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: calc(52px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0.5px solid transparent;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+}
+.unter.gescrollt .unternav {
+  background: var(--glas-dicht);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom-color: var(--haar);
+}
+.untertitel {
+  font-size: 17px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 0.2s,
+    transform 0.25s;
+}
+.unter.gescrollt .untertitel {
+  opacity: 1;
+  transform: none;
+}
+.unterzurueck {
+  position: absolute;
+  left: 6px;
+  bottom: 4px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 17px;
+  cursor: pointer;
+}
+.unterscroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(58px + env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+}
+.untergross {
+  text-align: left;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0 4px 6px;
+}
+.vsdatum {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 4px;
+}
+.vskurz {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 6px 4px 0;
+}
+.vspunkte {
+  list-style: none;
+  margin: 0;
+  padding: 0 4px;
+}
+.vspunkte li {
+  position: relative;
+  padding: 9px 0 9px 22px;
+  font-size: 16px;
+  line-height: 1.42;
+  border-bottom: 0.5px solid var(--haar);
+}
+.vspunkte li:last-child {
+  border-bottom: 0;
+}
+.vspunkte li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 17px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.vsjetzt {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accT);
+  border-radius: 6px;
+  padding: 1px 7px;
+  margin-left: 6px;
+  vertical-align: 2px;
+}
+
+/* ---------- Bewegung reduzieren ---------- */
+html[data-anim="aus"] .unter,
+html[data-anim="aus"] .iosegdaumen,
+html[data-anim="aus"] .ioswitch,
+html[data-anim="aus"] .ioswitch::after,
+html[data-anim="aus"] .pvbahn i {
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .unter,
+  .iosegdaumen,
+  .pvbahn i {
+    transition-duration: 0.01s !important;
+  }
+}
+
+/* ---------- Auswahllisten im Fenster: eine Gruppe statt Einzelkacheln ---------- */
+html body #sheet .opt {
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--fill) !important;
+  box-shadow: none !important;
+  min-height: 52px;
+  font-size: 17px !important;
+  font-weight: 500 !important;
+}
+html body #sheet .opt + .opt {
+  box-shadow: inset 0 0.5px 0 var(--haar) !important;
+}
+html body #sheet .opt:not(.opt + .opt) {
+  border-top-left-radius: 14px !important;
+  border-top-right-radius: 14px !important;
+}
+html body #sheet .opt:not(:has(+ .opt)) {
+  border-bottom-left-radius: 14px !important;
+  border-bottom-right-radius: 14px !important;
+}
+html body #sheet .sheetkoerper:has(> .opt) {
+  gap: 0 !important;
+}
+
+/* ---------- Ziele: ruhige Plakette statt drehender 3D-Münze ---------- */
+html body .mmed-buehne .mkante,
+html body .mmed-buehne .mkante2,
+html body .mmed-buehne .mglut,
+html body .mmed-buehne .mboden,
+html body .mmed-buehne .mfunken,
+html body .mmed-buehne .mrueck {
+  display: none !important;
+}
+html body .mmed-buehne .mhalter,
+html body .mmed-buehne .mwirbler,
+html body .mmed-buehne .mmed {
+  transform: none !important;
+  animation: none !important;
+}
+html body .mmed-buehne .mmed {
+  width: 150px !important;
+  height: 150px !important;
+  margin: 0 auto;
+}
+html body .mmed-buehne .mgesicht,
+html body .mmed-buehne .minnen {
+  background: none !important;
+  box-shadow: none !important;
+}
+html body .mmed-buehne .mprog circle {
+  stroke: var(--fill2) !important;
+}
+html body .mmed-buehne .mprog circle.mpring {
+  stroke: var(--m2, var(--accent)) !important;
+}
+html body .mmed-buehne .mstern {
+  fill: var(--m2, var(--accent)) !important;
+}
+html body .mmed-buehne .mgesicht * {
+  color: var(--text) !important;
+  text-shadow: none !important;
+}
+
+/* Eigene Markierung der unteren Leiste (gleitet unter den aktiven Reiter) */
+html body .tabbar .mlinse,
+html body .tabbar .tabpille {
+  display: none !important;
+}
+html body .tabbar .pvpille {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 5);
+  border-radius: 29px;
+  background: var(--linse);
+  pointer-events: none;
+  transition:
+    transform 0.45s var(--feder),
+    opacity 0.2s;
+}
+html body .page .btn.primary,
+html body .page .btn.primary::before,
+html body .page .btn.primary::after {
+  box-shadow: none !important;
+}

@@ -15,9 +15,10 @@
   function stufe() {
     try {
       const s = typeof settings === "object" && settings && settings.anim;
-      if (STUFEN.includes(s)) return s;
+      /* „Volle Pulle“ gibt es nicht mehr – dezent ist der Standard */
+      if (s === "aus") return "aus";
     } catch (e) {}
-    return sparsam ? "ruhig" : "voll";
+    return "ruhig";
   }
   function stufeSetzen(v) {
     if (!STUFEN.includes(v)) return;
