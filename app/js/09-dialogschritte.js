@@ -878,7 +878,7 @@ function paintRoh() {
   }
 
   if (step === "art") {
-    sheet.innerHTML = head("Art des Meetings") + opts(MEETINGS, "art") + backBtn("kind");
+    sheet.innerHTML = head("Art des Meetings") + opts(istTeamleiter() ? [...MEETINGS, "ViKo", "TL Runde"] : MEETINGS, "art") + backBtn("kind");
     wireBack();
     sheet.querySelectorAll("[data-art]").forEach(
       (b) =>

@@ -7,6 +7,21 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.5",
+    datum: "Oktober 2026",
+    kurz: "Uhrzeiten in Viertelstunden, ViKo und TL Runde",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Alle Uhrzeiten wählst du jetzt in 15-Minuten-Schritten statt minutengenau – bei Meetings, Privat, Individuell, Terminieren, Büro, Nachbereitung und Fahrtenbuch.",
+          "Leere Zeitfelder öffnen bei der aktuellen Uhrzeit.",
+        ],
+      ],
+      ["Neu", ["Als Teamleiterin gibt es unter Meeting zusätzlich „ViKo“ und „TL Runde“."]],
+    ],
+  },
+  {
     v: "Beta 1.4",
     datum: "Oktober 2026",
     kurz: "Praxis-Einführung und ruhige Fenster",
