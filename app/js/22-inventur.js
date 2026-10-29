@@ -156,7 +156,7 @@ function renderInventur() {
     <div class="asec">
       <h3>K70 Inventur</h3>
       <div class="invsumme"><span>Warenbestand gesamt</span><b>${preis(bestandWert())} €</b></div>
-      <p class="sub">Warenbestand nach Kategorien des Shops — Reihenfolge wie im Original.</p>
+      <p class="sub erkl">Warenbestand nach Kategorien des Shops — Reihenfolge wie im Original.</p>
       <div class="field vorschlagfeld">
         <input id="invSuche" value="${invSuche}" placeholder="Artikel oder Preis suchen" autocomplete="off" inputmode="search">
         <div class="vorschlaege" id="invVorschlaege" hidden></div>

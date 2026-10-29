@@ -414,7 +414,7 @@ function passwortAendernDialog() {
     `<div class="grp"><input type="text" name="username" autocomplete="username" value="${me.dk}" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">${fld("ppAlt", "Aktuelles Passwort", "", "password", 'autocomplete="current-password"')}
        ${fld("ppNeu", "Neues Passwort", "", "password", 'autocomplete="new-password"')}
        ${fld("ppNeu2", "Neues Passwort wiederholen", "", "password", 'autocomplete="new-password"')}</div>
-     <p class="hinweis">${PW_REGEL_TEXT}</p>
+     <p class="hinweis bleibt">${PW_REGEL_TEXT}</p>
      <p class="err" id="ppErr" hidden></p>`,
     async () => {
       const alt = document.getElementById("ppAlt").value;

@@ -2359,3 +2359,22 @@ html body .scrim.open {
     --u: min(calc(94.8vw / var(--dw, 1470)), calc((100vh - 3.6vw) / var(--dh, 640))) !important;
   }
 }
+
+/* Beta 1.5.2 · Erklärtexte ausgeblendet – nur Hinweise mit Inhalt (Zahlen, Knöpfe, Treffer) bleiben */
+html body .hinweis:not(.bleibt):not([id]):not(.warn):not(.tmeinst):not(.wquote):not(:has(button, a, input)),
+html body .esfuss,
+html body .zfhinweis,
+html body #sheet .hint,
+html body .erkl {
+  display: none !important;
+}
+
+/* Beta 1.5.2 · Uhrzeiten mittig */
+html body select.viertel,
+html body select#f_start,
+html body select#gpfH,
+html body select#ptZeit {
+  text-align: center;
+  text-align-last: center;
+  -moz-text-align-last: center;
+}

@@ -83,7 +83,7 @@ async function renderProfil() {
           als Start- oder Zieladresse einsetzen.</p>
         <p class="hinweis" style="margin-top:0">Wer weniger als 52 Wochen dabei ist, gilt als Berufseinsteiger —
           davon hängen die Ziele ab.</p>
-        ${me.mailPending && !me.mail ? `<p class="hinweis">Für ${me.mailPending} steht die Bestätigung noch aus.</p>` : ""}
+        ${me.mailPending && !me.mail ? `<p class="hinweis bleibt">Für ${me.mailPending} steht die Bestätigung noch aus.</p>` : ""}
       </div>
       <p class="err" id="pfErr" hidden></p>
       <div class="ah4">Was gerade läuft</div>

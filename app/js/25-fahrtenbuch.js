@@ -185,7 +185,7 @@ function renderFahrten() {
   box.innerHTML = `
     <div class="asec">
       <h3>Fahrtenbuch</h3>
-      <p class="sub">Jede Fahrt einzeln eintragen — Datum setzt sich von selbst.</p>
+      <p class="sub erkl">Jede Fahrt einzeln eintragen — Datum setzt sich von selbst.</p>
       <div class="actions"><button class="btn primary" id="fbNeu">Fahrt hinzufügen</button></div>
       ${
         monate.length > 1

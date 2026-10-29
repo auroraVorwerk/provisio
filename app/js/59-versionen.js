@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.5.2",
+    datum: "Oktober 2026",
+    kurz: "Ohne Erklärtexte, Uhrzeiten mittig",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Die kleinen grauen Erklärtexte sind aus der ganzen App verschwunden. Hinweise mit echtem Inhalt – Treffer, Strecke, Status, Knöpfe – bleiben.",
+          "Uhrzeiten stehen in den Feldern mittig.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.5.1",
     datum: "Oktober 2026",
     kurz: "iPhone Duo wird zuverlässig erkannt",

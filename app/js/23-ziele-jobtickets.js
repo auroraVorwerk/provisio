@@ -96,14 +96,14 @@ function zielQuer(titel, ist, ziel, einheit, unter) {
     <div class="lzh-bahn"><i style="--p:${Math.max(2, pct).toFixed(1)}%"></i></div>
     <div class="lzh-fuss"><b data-keinzaehlen>${Math.floor(pct)} % schon erreicht</b>
       <span>${pct >= 100 ? "geschafft" : "noch " + z(Math.max(0, ziel - ist))}</span></div>
-    ${unter ? `<p class="hinweis" style="margin:6px 0 0">${unter}</p>` : ""}
+    ${unter ? `<p class="hinweis bleibt" style="margin:6px 0 0">${unter}</p>` : ""}
   </div>`;
 }
 function zielGruppe(titel, unter, balken) {
   const erreicht = balken.some((b) => b.includes("erreicht ✓"));
   return `<div class="asec zsec${erreicht ? " gewonnen" : ""}">
     <h3>${titel}${erreicht ? ' <span class="zhaken">erreicht</span>' : ""}</h3>
-    <p class="sub">${unter}</p>
+    <p class="sub erkl">${unter}</p>
     <div class="zsaeulen" style="--n:${balken.length}">${balken.join("")}</div>
   </div>`;
 }
@@ -172,7 +172,7 @@ function renderZiele() {
     if (!settings.einstellung) {
       h += `<div class="asec zsec offen">
         <h3>Berufseinsteiger</h3>
-        <p class="sub">Trag im Profil dein Einstellungsdatum ein — wer weniger als 52 Wochen dabei ist,
+        <p class="sub erkl">Trag im Profil dein Einstellungsdatum ein — wer weniger als 52 Wochen dabei ist,
           hat zusätzliche Ziele, die hier erscheinen.</p></div>`;
     } else if (istBerufseinsteiger() && ef) {
       const heuteK = dk(new Date());
@@ -223,7 +223,7 @@ function renderZiele() {
 
   h += `<div class="asec zsec">
     <h3>Goldene Nadel</h3>
-    <p class="sub">Über den gesamten Zeitraum gerechnet, nicht je Jahr.</p>
+    <p class="sub erkl">Über den gesamten Zeitraum gerechnet, nicht je Jahr.</p>
     <div class="kpis">${kpi("Gesamter Nettoumsatz", eur(gesamt) + " €", `nächste Stufe: ${naechste.t} ab ${eur(naechste.z)} €`, "hero")}</div>
     ${zielQuer("Bis " + naechste.t, gesamt, naechste.z, "€")}
     <div class="zstufen">${stufen
@@ -252,7 +252,7 @@ function renderZiele() {
     const vian = anmDerKampagne(typeof KAMPAGNE_AKTIV !== "undefined" ? KAMPAGNE_AKTIV : "q4").length;
     h += `<div class="asec zsec">
       <h3>Vian</h3>
-      <p class="sub">Qualifizierte Anmeldungen der laufenden Kampagne.</p>
+      <p class="sub erkl">Qualifizierte Anmeldungen der laufenden Kampagne.</p>
       ${zielQuer("Qualifizierte Anmeldungen", vian, VIAN_ZIEL, "")}
     </div>`;
   } else
@@ -279,7 +279,7 @@ function renderJobtickets() {
   box.innerHTML = `
     <div class="asec">
       <h3>Jobtickets</h3>
-      <p class="sub">Ein Jobticket wird zur qualifizierten Anmeldung, sobald die Person angestellt ist
+      <p class="sub erkl">Ein Jobticket wird zur qualifizierten Anmeldung, sobald die Person angestellt ist
         und die ersten 5.000 € Nettoumsatz geschrieben hat.</p>
       <div class="field jahrwahl"><label for="jobJahrSel">Vertriebsjahr</label>
         <select id="jobJahrSel">${jahre
@@ -296,7 +296,7 @@ function renderJobtickets() {
 
     <div class="asec">
       <div class="ah4">Von Hand nachtragen</div>
-      <p class="sub">Alles, was nicht aus einem Kundentermin kommt.</p>
+      <p class="sub erkl">Alles, was nicht aus einem Kundentermin kommt.</p>
       ${zaehlFeld("jbManuell", "Zusätzliche Jobtickets", j.manuell)}
       ${zaehlFeld("jbQual", "Qualifizierte Anmeldungen", j.qualifiziert)}
       ${istTeamleiter() ? zaehlFeld("jbEigene", "davon in eigener Region", j.qualEigene) : ""}
@@ -372,7 +372,7 @@ function renderTeamumsatz() {
   box.innerHTML = `
     <div class="asec">
       <h3>Teamumsatz</h3>
-      <p class="sub">Nettoumsatz des Teams je Vertriebsmonat — von Hand eingetragen.
+      <p class="sub erkl">Nettoumsatz des Teams je Vertriebsmonat — von Hand eingetragen.
         Der Umsatz der Berufseinsteiger wird getrennt erfasst und ist im Teamumsatz enthalten.</p>
       <div class="field jahrwahl"><label for="tuJahrSel">Vertriebsjahr</label>
         <select id="tuJahrSel">${jahre

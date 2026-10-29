@@ -751,7 +751,7 @@ renderZiele = function () {
   platz.innerHTML = `
     <div class="anmtitel"><h3>Vian${erreicht ? ' <span class="zhaken">erreicht</span>' : ""}</h3>
       <button class="anmplus" id="vianNeu" aria-label="Anmeldung hinzufügen">+</button></div>
-    <p class="sub">Nur für Teamleiter. Gezählt werden qualifizierte Anmeldungen der Kampagne ${k.name}:
+    <p class="sub erkl">Nur für Teamleiter. Gezählt werden qualifizierte Anmeldungen der Kampagne ${k.name}:
       Einstellung ab dem ${fmt(fromDk(k.einstVon))}, Qualifizierung bis ${fmt(fromDk(k.qualBis))}.</p>
     ${zielQuer(
       "Qualifizierte Anmeldungen",

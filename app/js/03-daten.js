@@ -36,7 +36,7 @@ function archivZeigen(tag, hr) {
     `${fmt(fromDk(tag))} · ${pad(hr)}–${pad(hr + 2)} Uhr`,
     `<div class="grp">
        <p style="margin:0 0 6px;font-weight:700">${name}</p>
-       ${a.quelle ? `<p class="hinweis" style="margin:0">Quelle: ${a.quelle}</p>` : ""}
+       ${a.quelle ? `<p class="hinweis bleibt" style="margin:0">Quelle: ${a.quelle}</p>` : ""}
        <p class="hinweis">Der Zeitblock ist frei — du kannst ihn ganz normal neu belegen.
          ${a.nachname ? "Der Kunde steht in deiner Potenzialliste." : ""}</p>
      </div>

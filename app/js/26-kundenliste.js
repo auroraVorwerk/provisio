@@ -95,7 +95,7 @@ function renderKunden() {
   box.innerHTML = `
     <div class="asec">
       <h3>Kundenliste</h3>
-      <p class="sub">Ergibt sich von selbst aus allen Terminen. Derselbe Kunde erscheint nur einmal,
+      <p class="sub erkl">Ergibt sich von selbst aus allen Terminen. Derselbe Kunde erscheint nur einmal,
         auch wenn der Name unterschiedlich geschrieben wurde.</p>
       <div class="kpis">
         ${kpi("Erfasste Kunden", String(alle.length), `${kaeufer} haben gekauft`, "hero")}
@@ -115,7 +115,7 @@ function renderKunden() {
     ${dubletten(alle)
       .map(
         (g) => `<div class="asec">
-      <p class="hinweis" style="margin-top:0">Möglicherweise derselbe Kunde:
+      <p class="hinweis bleibt" style="margin-top:0">Möglicherweise derselbe Kunde:
         ${g.map((r) => `${r.vorname} ${r.nachname}, ${r.strasse || "ohne Straße"}`).join(" · ")}</p>
       <div class="actions"><button class="btn" data-kdmerge="${g.map((r) => r.id).join("~")}">Zusammenführen</button></div>
     </div>`,

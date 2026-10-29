@@ -99,7 +99,7 @@ function renderWunsch() {
     ? `
     <div class="asec">
       <h3>Was das an Umsatz bedeutet</h3>
-      <p class="sub">Bei 75 % Festgebiet und 25 % Weißgebiet, gerechnet auf den laufenden Vertriebsmonat mit ${vm.weeks} Wochen</p>
+      <p class="sub erkl">Bei 75 % Festgebiet und 25 % Weißgebiet, gerechnet auf den laufenden Vertriebsmonat mit ${vm.weeks} Wochen</p>
       <div class="kpis">
         ${kpi("Nötiger Umsatz brutto", eur(ziel * MWST) + " €", eur(ziel) + " € netto", "hero")}
         ${kpi("davon Festgebiet (75 %)", eur(ziel * 0.75 * MWST) + " €", `bisher ${eur(ist.fg)} €`)}
