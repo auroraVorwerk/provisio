@@ -331,33 +331,7 @@
   }
   window.terminModus = terminModus;
 
-  /* Termin-Modus auch aus dem geöffneten Kundentermin starten */
-  if (typeof window.paint === "function") {
-    const vor = window.paint;
-    window.paint = function () {
-      const r = vor.apply(this, arguments);
-      sicher(() => {
-        if (!draft || step !== "view") return;
-        const e = entries[key(draft.day, draft.hour)];
-        if (!e || e.kind !== "kunde" || e.status || (draft.nb && draft.nb.status)) return;
-        const heute = dk(new Date());
-        if (draft.day !== heute) return;
-        const fuss = sheet.querySelector(".sheetfuss");
-        if (!fuss || sheet.querySelector("#utmStart")) return;
-        const reihe = document.createElement("div");
-        reihe.className = "actions";
-        reihe.innerHTML = `<button class="btn wide primary" id="utmStart">Termin-Modus starten</button>`;
-        fuss.prepend(reihe);
-        reihe.querySelector("#utmStart").onclick = () => {
-          const t = draft.day,
-            h = draft.hour;
-          closeModal();
-          terminModus(t, h);
-        };
-      });
-      return r;
-    };
-  }
+  /* Termin-Modus wird bei Kundenterminen nicht mehr angeboten (Beta 1.1.3) */
 
   /* ---------- Trichter ---------- */
   PAGES.trichter = "Trichter";

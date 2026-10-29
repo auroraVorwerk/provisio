@@ -150,7 +150,7 @@
         <span class="utext"><b>${esc(name)}</b><span>${zeitText(naechst.von)}–${zeitText(naechst.bis)}${l.t2 && l.t2 !== name ? " · " + esc(l.t2) : ""}${adr ? " · " + esc(adr) : ""}</span></span>
         <span class="uwann${laeuft ? " jetzt" : ""}">${wann}</span>
       </button>
-      ${modus ? `<button type="button" class="ubtn primaer" data-tmodus="${heute}|${naechst.h}">Termin-Modus starten</button>` : ""}
+
     </div>`;
   }
 

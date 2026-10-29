@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.1.3",
+    datum: "Oktober 2026",
+    kurz: "Termine in einem Satz eintragen",
+    teile: [
+      [
+        "Neu",
+        [
+          "Schnell eintragen: Im Planer auf Plus tippen und den Termin in einem Satz sprechen oder tippen – zum Beispiel „Dienstag 10 Uhr Kundentermin Familie Becker, Hauptstraße 5, Empfehlung“. Tag, Uhrzeit, Art, Name, Adresse, Telefon und Ziel werden erkannt und vor dem Anlegen gezeigt.",
+        ],
+      ],
+      ["Entfernt", ["„Termin-Modus starten“ bei Kundenterminen."]],
+    ],
+  },
+  {
     v: "Beta 1.1.2",
     datum: "Oktober 2026",
     kurz: "Anmeldung mit DK-Nummer im Schlüsselbund",
