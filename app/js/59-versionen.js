@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.5.1",
+    datum: "Oktober 2026",
+    kurz: "iPhone Duo wird zuverlässig erkannt",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Der iPhone-Duo-Modus schaltet sich nur noch auf einem echten iPhone Duo von selbst ein. Auf normalen iPhones sprang er in Safari (Leisten oder Tastatur sichtbar) fälschlich an – auch in der Einführung.",
+          "Zum Testen im Simulator: Einstellungen → Darstellung → iPhone Duo → An.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.5",
     datum: "Oktober 2026",
     kurz: "Uhrzeiten in Viertelstunden, ViKo und TL Runde",

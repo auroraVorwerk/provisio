@@ -46,14 +46,21 @@
       h = innerHeight;
     if (!w || !h) return "";
     const quer = w > h;
-    const r = quer ? w / h : h / w;
     const touch = matchMedia("(pointer: coarse)").matches;
     if (m === "auto") {
-      /* 1:√2 ≈ 1,41 – mit Safari-Leisten bis etwa 1,62; normale iPhones liegen bei 1,8–2,2 */
-      if (r < 1.25 || r > 1.64) return "";
+      /*
+       * Erkannt wird am Display selbst (screen), nicht am sichtbaren Fenster:
+       * Safari-Leisten und Tastatur verkürzen das Fenster, und ein normales
+       * iPhone sah sonst kurz wie 1:√2 aus. Displays: iPhone 1:2,17, SE 1:1,78,
+       * iPhone Duo 1:1,42–1,45. iPads (kurze Seite über 700) bleiben außen vor.
+       */
       if (!touch) return "";
-      if (quer) return h <= 700 ? "duo-quer" : "";
-      if (w < 378) return ""; // iPhone SE / mini in Safari
+      const kurz = Math.min(screen.width, screen.height),
+        lang = Math.max(screen.width, screen.height);
+      if (!kurz) return "";
+      const dr = lang / kurz;
+      if (dr < 1.3 || dr > 1.56 || kurz > 700) return "";
+      if (quer) return "duo-quer";
       return w < 560 ? "duo-zu" : "duo-auf";
     }
     /* fest an */
