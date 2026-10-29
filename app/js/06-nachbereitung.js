@@ -215,6 +215,22 @@ function saveNbPremium(e) {
   renderAll();
 }
 
+/*
+ * Nach der Übernahme in den ursprünglichen Termin trägt der Abholtermin selbst
+ * keine Zahlen mehr – sonst zählten Einheiten, Umsatz und K70 doppelt
+ * (Statistik, Wochenmeldung, Provision, Verkäufe, Kundenliste).
+ */
+function abholNeutralisieren(nb) {
+  const uebernommen = {};
+  ["einheiten", "umsatz", "k70betrag", "umsatzFG", "umsatzWG", "provVK", "provKT"].forEach((f) => {
+    if (nb[f] !== undefined && nb[f] !== "") uebernommen[f] = nb[f];
+    delete nb[f];
+  });
+  if (nb.verkauft === "Ja" || nb.verkauft === "Übertragen") nb.verkauft = "Übertragen";
+  if (nb.k70 === "Ja" || nb.k70 === "Übertragen") nb.k70 = "Übertragen";
+  nb.uebertragen = Object.assign(nb.uebertragen || {}, uebernommen);
+}
+
 /* Nachbereitung des Abholtermins – das Ergebnis wandert in den ursprünglichen Kundentermin */
 function abholForm(e) {
   const n = draft.nb;
@@ -340,10 +356,7 @@ function saveAbhol(e) {
    * Der Verkauf steht jetzt im ursprünglichen Kundentermin. Hier nur noch als
    * Hinweis – sonst zählten Einheiten, Umsatz und K70 doppelt.
    */
-  if (urspruenglich && urspruenglich.nb && n.verkauft === "Ja") {
-    e.nb.verkauft = "Übertragen";
-    if (e.nb.k70 === "Ja") e.nb.k70 = "Übertragen";
-  }
+  if (urspruenglich && urspruenglich.nb && n.verkauft === "Ja") abholNeutralisieren(e.nb);
   closeModal();
   renderAll();
 }

@@ -87,6 +87,18 @@ function zielBalken(titel, ist, ziel, einheit, hinweis) {
     ${fertig ? '<span class="zerreicht" hidden>erreicht ✓</span>' : ""}
   </div>`;
 }
+/* Ein Ziel als waagerechter, bunter Balken – wie das persönliche Langzeitziel */
+function zielQuer(titel, ist, ziel, einheit, unter) {
+  const pct = ziel > 0 ? Math.min(100, (ist / ziel) * 100) : 0;
+  const z = (v) => (einheit === "€" ? eur(v) + " €" : `${Math.round(v * 10) / 10}`.replace(".", ","));
+  return `<div class="zquer${pct >= 100 ? " erreicht" : ""}">
+    <div class="lzh-kopf"><b>${titel}</b><span>${z(ist)} von ${z(ziel)}</span></div>
+    <div class="lzh-bahn"><i style="--p:${Math.max(2, pct).toFixed(1)}%"></i></div>
+    <div class="lzh-fuss"><b data-keinzaehlen>${Math.floor(pct)} % schon erreicht</b>
+      <span>${pct >= 100 ? "geschafft" : "noch " + z(Math.max(0, ziel - ist))}</span></div>
+    ${unter ? `<p class="hinweis" style="margin:6px 0 0">${unter}</p>` : ""}
+  </div>`;
+}
 function zielGruppe(titel, unter, balken) {
   const erreicht = balken.some((b) => b.includes("erreicht ✓"));
   return `<div class="asec zsec${erreicht ? " gewonnen" : ""}">
@@ -213,7 +225,7 @@ function renderZiele() {
     <h3>Goldene Nadel</h3>
     <p class="sub">Über den gesamten Zeitraum gerechnet, nicht je Jahr.</p>
     <div class="kpis">${kpi("Gesamter Nettoumsatz", eur(gesamt) + " €", `nächste Stufe: ${naechste.t} ab ${eur(naechste.z)} €`, "hero")}</div>
-    ${zielBalken("Bis " + naechste.t, gesamt, naechste.z, "€")}
+    ${zielQuer("Bis " + naechste.t, gesamt, naechste.z, "€")}
     <div class="zstufen">${stufen
       .map(([t, an, sub]) => `<div class="zstufe${an ? " an" : ""}"><b>${t}</b><span>${sub}</span></div>`)
       .join("")}</div>
@@ -236,7 +248,15 @@ function renderZiele() {
     }
   </div>`;
 
-  h += `<div class="asec zsec offen">
+  if (typeof anmDerKampagne === "function" && typeof VIAN_ZIEL !== "undefined") {
+    const vian = anmDerKampagne(typeof KAMPAGNE_AKTIV !== "undefined" ? KAMPAGNE_AKTIV : "q4").length;
+    h += `<div class="asec zsec">
+      <h3>Vian</h3>
+      <p class="sub">Qualifizierte Anmeldungen der laufenden Kampagne.</p>
+      ${zielQuer("Qualifizierte Anmeldungen", vian, VIAN_ZIEL, "")}
+    </div>`;
+  } else
+    h += `<div class="asec zsec offen">
     <h3>Vian</h3>
     <p class="sub">Ziel noch offen — sobald die Kriterien feststehen, erscheinen sie hier.</p>
   </div>`;

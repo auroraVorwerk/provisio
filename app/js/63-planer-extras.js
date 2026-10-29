@@ -292,11 +292,15 @@
     /* Abholtermine, deren Verkauf schon im ursprünglichen Termin steht, nicht doppelt zählen */
     Object.keys(entries).forEach((k) => {
       const e = entries[k];
-      if (!e || e.kind !== "abholen" || !e.nb || e.nb.verkauft !== "Ja" || e.vonTag === undefined) return;
+      if (!e || e.kind !== "abholen" || !e.nb || e.vonTag === undefined) return;
+      if (e.nb.verkauft !== "Ja" && e.nb.verkauft !== "Übertragen") return;
+      const zahlen = ["einheiten", "umsatz", "k70betrag", "umsatzFG", "umsatzWG"].some(
+        (f) => e.nb[f] !== undefined && e.nb[f] !== "",
+      );
+      if (e.nb.verkauft === "Übertragen" && !zahlen) return;
       const u = entries[key(e.vonTag, e.vonStunde)];
-      if (u && u.nb && u.nb.verkauft === "Ja" && u.nb.lieferdatum === k.split("|")[0]) {
-        e.nb.verkauft = "Übertragen";
-        if (e.nb.k70 === "Ja") e.nb.k70 = "Übertragen";
+      if (u && u.nb && u.nb.verkauft === "Ja") {
+        abholNeutralisieren(e.nb);
         geaendert = true;
       }
     });

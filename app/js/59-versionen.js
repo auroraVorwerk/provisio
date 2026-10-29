@@ -7,6 +7,25 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.2",
+    datum: "Oktober 2026",
+    kurz: "Abholtermin, Einstunden-Termine, Provision und Glas",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Abholtermin: Verkäufe zählen jetzt wirklich nur einmal – auch in Statistik, Verkäufen und Kundenliste. Bestehende Daten werden beim Start korrigiert.",
+          "Planer: Termine von einer Stunde behalten ihre echte Höhe und überlappen nicht mehr.",
+          "Provision: Brutto und netto in einer Zeile, die Sätze darunter; Sonstiges mit Leads und Leervorführungen, Zuschuss mit RV und KV getrennt.",
+          "Ziele: Goldene Nadel und Vian als bunte Balken wie das persönliche Ziel. Anmeldungen für den Vian trägst du jetzt direkt dort ein.",
+          "Statistik: Terminkarten mit Abstand zum Rand.",
+          "Untere Leiste bleibt fest unten, auch nach dem Tippen.",
+          "Flüssigglas in der Leiste mit Lichtkante und Glanz.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.1.3",
     datum: "Oktober 2026",
     kurz: "Termine in einem Satz eintragen",

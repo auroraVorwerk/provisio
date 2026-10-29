@@ -653,7 +653,7 @@ renderJobtickets = function () {
             ? `<div class="anmmini">${s.ausListe
                 .map(
                   (a) =>
-                    `<span><b>${anmName(a)}</b><i>qualifiziert ${anmQualText(a)} · zählt fürs Auto, keine Prämie</i></span>`,
+                    `<span data-anmedit="${a.id}" role="button"><b>${anmName(a)}</b><i>qualifiziert ${anmQualText(a)} · zählt fürs Auto, keine Prämie</i></span>`,
                 )
                 .join("")}</div>`
             : ""
@@ -749,10 +749,11 @@ renderZiele = function () {
 
   platz.className = "asec zsec" + (erreicht ? " gewonnen" : "");
   platz.innerHTML = `
-    <h3>Vian${erreicht ? ' <span class="zhaken">erreicht</span>' : ""}</h3>
+    <div class="anmtitel"><h3>Vian${erreicht ? ' <span class="zhaken">erreicht</span>' : ""}</h3>
+      <button class="anmplus" id="vianNeu" aria-label="Anmeldung hinzufügen">+</button></div>
     <p class="sub">Nur für Teamleiter. Gezählt werden qualifizierte Anmeldungen der Kampagne ${k.name}:
       Einstellung ab dem ${fmt(fromDk(k.einstVon))}, Qualifizierung bis ${fmt(fromDk(k.qualBis))}.</p>
-    ${zielBalken(
+    ${zielQuer(
       "Qualifizierte Anmeldungen",
       vian.length,
       VIAN_ZIEL,
@@ -770,6 +771,16 @@ renderZiele = function () {
         : ""
     }
     ${
+      offenAbStichtag.length
+        ? `<div class="anmmini">${offenAbStichtag
+            .map(
+              (a) =>
+                `<span data-anmedit="${a.id}" role="button"><b>${anmName(a)}</b><i>eingestellt ${fmt(fromDk(a.einst))} · noch nicht qualifiziert</i></span>`,
+            )
+            .join("")}</div>`
+        : ""
+    }
+    ${
       p.gesamt
         ? `<div class="kpis"><div class="kpi hero"><span class="kl">Prämie aus ${k.name}</span>
       <span class="kv">${eur(p.gesamt)} €</span>
@@ -778,7 +789,10 @@ renderZiele = function () {
     }
     <p class="hinweis">Anmeldungen von vor dem ${fmt(fromDk(k.einstVon))} werden hier nicht gewertet —
       für Club of Excellence und Kobold Club zählen sie weiter mit.
-      Eintragen und nachtragen kannst du alles unter <b>Jobtickets</b>.</p>`;
+      Neue Anmeldung mit Plus, zum Bearbeiten oder Qualifizieren auf einen Namen tippen.</p>`;
+  const neu = platz.querySelector("#vianNeu");
+  if (neu) neu.onclick = () => anmDialog(null);
+  platz.querySelectorAll("[data-anmedit]").forEach((b) => (b.onclick = () => anmDialog(b.dataset.anmedit)));
 };
 
 /*

@@ -33,7 +33,8 @@ function pvSchnitt() {
 }
 
 function pvZeile(titel, unter, wert, cls = "") {
-  return `<li class="pvz ${cls}"><span class="pvzt">${titel}${unter ? `<small>${unter}</small>` : ""}</span><b>${wert}</b></li>`;
+  const zeilen = (Array.isArray(unter) ? unter : [unter]).filter(Boolean);
+  return `<li class="pvz ${cls}"><span class="pvzt">${titel}${zeilen.map((z) => `<small>${z}</small>`).join("")}</span><b>${wert}</b></li>`;
 }
 
 renderProv = function () {
@@ -68,27 +69,20 @@ renderProv = function () {
   ).join("");
 
   const zeilen = [];
-  zeilen.push(pvZeile("Weißgebiet", `netto ${pvEuro(p.wgN)} · ${satzText("")}${abgegeben(p.abWG)}`, pvEuro(p.pWG)));
+  const betraege = (brutto, nettoWert, ab) =>
+    `brutto ${pvEuro(brutto)} · netto ${pvEuro(nettoWert)}${ab > 0.5 ? ` · ${pvEuro(ab)} abgegeben` : ""}`;
+  const praemieText = praemie ? ` + ${praemie} % Prämie` : "";
+  zeilen.push(pvZeile("Weißgebiet", [betraege(u.wg, p.wgN, p.abWG), "15 + 5 %"], pvEuro(p.pWG)));
+  zeilen.push(pvZeile("Festgebiet", [betraege(u.fg, p.fgN, p.abFG), `15 + 5 %${praemieText}`], pvEuro(p.pFG)));
   zeilen.push(
-    pvZeile(
-      "Festgebiet",
-      `netto ${pvEuro(p.fgN)} · ${satzText(praemie ? ` + ${praemie} % Prämie` : "")}${abgegeben(p.abFG)}`,
-      pvEuro(p.pFG),
-    ),
-  );
-  zeilen.push(
-    pvZeile(
-      "K70 Einkauf",
-      `netto ${pvEuro(p.einN)} · ${satzText(praemie ? ` + ${praemie} % Prämie` : "")} + 6 % Bonus`,
-      pvEuro(p.pK70),
-    ),
+    pvZeile("K70 Einkauf", [betraege(u.k70ein, p.einN, 0), `15 + 5 %${praemieText} + 6 % Bonus`], pvEuro(p.pK70)),
   );
   if (p.messeN)
-    zeilen.push(pvZeile("Messe", `netto ${pvEuro(p.messeN)} · 20 %${abgegeben(p.abMesse)}`, pvEuro(p.pMesse || 0)));
+    zeilen.push(pvZeile("Messe", [betraege(u.messe, p.messeN, p.abMesse), "20 %"], pvEuro(p.pMesse || 0)));
   zeilen.push(
     pvZeile(
       "Sonstiges",
-      `Leads netto ${pvEuro(p.leadN)} · 5 % · Leervorführungen netto ${pvEuro(p.leerN)} · 10 %`,
+      [`Leads netto ${pvEuro(p.leadN)}`, `Leervorführungen netto ${pvEuro(p.leerN)}`],
       pvEuro(p.pSonst),
     ),
   );
@@ -103,7 +97,7 @@ renderProv = function () {
   zeilen.push(
     pvZeile(
       "Versicherungszuschuss",
-      `9 % RV ${pvEuro(p.zuschussRV)} · 5 % KV ${pvEuro(p.zuschussKV)}`,
+      [`RV 9 % · ${pvEuro(p.zuschussRV)}`, `KV 5 % · ${pvEuro(p.zuschussKV)}`],
       "+ " + pvEuro(p.vers),
     ),
   );
