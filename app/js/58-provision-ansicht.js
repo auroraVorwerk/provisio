@@ -2,9 +2,10 @@
  * Provision – ruhige Ansicht
  *
  * Oben die Überweisung als große Zahl mit Fortschritt zur nächsten
- * Bonusstufe, darunter schlicht, woraus sie sich zusammensetzt. Dazu
- * „Was wäre, wenn“, geteilte Verkäufe und – für Teamleiter – die
- * Teamprovision getrennt nach Satz. Die Detailbereiche (Bonusstufen,
+ * Prämienstufe, darunter, woraus sie sich zusammensetzt: Weißgebiet,
+ * Festgebiet, K70 Einkauf, Sonstiges, Teamprovision, Versicherungszuschuss.
+ * Darunter die Teamprovision im Detail (je Mitglied und Satz), geteilte
+ * Verkäufe und „Was wäre, wenn“. Die Detailbereiche (Prämienstufen,
  * Arbeitszeit, K70, Ausgleich) kommen aus dem Rechner selbst.
  */
 let pvWenn = 0;
@@ -46,16 +47,18 @@ renderProv = function () {
   const rechnung = box.querySelector('[data-klapp="rechnung"]');
   if (rechnung) rechnung.closest(".asec").remove();
   box.querySelectorAll(":scope > .kpis").forEach((k) => k.remove());
+  const stufenKopf = box.querySelector('[data-klapp="stufen"] span');
+  if (stufenKopf) stufenKopf.textContent = "Prämienstufen in diesem Vertriebsmonat";
 
   const vm = vertriebsmonat(new Date());
   const u = umsatz(vm.fromK, vm.toK);
   const p = provision(u, vm.weeks);
   const tl = !!(me && istTeamleiter() && !fremdAktiv);
-  const team = tl ? teamProvisionDaten(vm) : [];
-  const teamSumme = team.reduce((s, x) => s + x.anteil, 0);
-  const gesamt = p.gesamt + teamSumme;
+  const praemie = Math.round(p.b * 100);
+  const satzText = (extra) => `15 + 5 %${extra}`;
+  const abgegeben = (x) => (x > 0.5 ? ` · ${pvEuro(x)} abgegeben` : "");
 
-  /* Fortschritt zur nächsten Bonusstufe */
+  /* Fortschritt zur nächsten Prämienstufe */
   const f = vm.weeks / 4;
   const max = TIERS[TIERS.length - 1].u * f;
   const pct = Math.min(100, (p.basis / max) * 100);
@@ -65,45 +68,71 @@ renderProv = function () {
   ).join("");
 
   const zeilen = [];
+  zeilen.push(pvZeile("Weißgebiet", `netto ${pvEuro(p.wgN)} · ${satzText("")}${abgegeben(p.abWG)}`, pvEuro(p.pWG)));
   zeilen.push(
     pvZeile(
       "Festgebiet",
-      `netto ${pvEuro(p.fgN)} · ${20 + Math.round(p.b * 100)} %`,
-      pvEuro(p.pFG + (p.abFG || 0)),
+      `netto ${pvEuro(p.fgN)} · ${satzText(praemie ? ` + ${praemie} % Prämie` : "")}${abgegeben(p.abFG)}`,
+      pvEuro(p.pFG),
     ),
   );
-  zeilen.push(pvZeile("Weißgebiet", `netto ${pvEuro(p.wgN)} · 20 %`, pvEuro(p.pWG + (p.abWG || 0))));
-  if (p.einN) zeilen.push(pvZeile("K70 Einkauf", `netto ${pvEuro(p.einN)} · ${26 + Math.round(p.b * 100)} %`, pvEuro(p.pK70)));
+  zeilen.push(
+    pvZeile(
+      "K70 Einkauf",
+      `netto ${pvEuro(p.einN)} · ${satzText(praemie ? ` + ${praemie} % Prämie` : "")} + 6 % Bonus`,
+      pvEuro(p.pK70),
+    ),
+  );
   if (p.messeN)
-    zeilen.push(pvZeile("Messe", `netto ${pvEuro(p.messeN)} · 20 %`, pvEuro((p.pMesse || 0) + (p.abMesse || 0))));
-  if (p.abgegeben) zeilen.push(pvZeile("Geteilte Verkäufe", "an Partner abgegeben", "− " + pvEuro(p.abgegeben), "minus"));
-  zeilen.push(pvZeile("Bonus", "14 % auf die Provision", "+ " + pvEuro(p.vers)));
+    zeilen.push(pvZeile("Messe", `netto ${pvEuro(p.messeN)} · 20 %${abgegeben(p.abMesse)}`, pvEuro(p.pMesse || 0)));
+  zeilen.push(
+    pvZeile(
+      "Sonstiges",
+      `Leads netto ${pvEuro(p.leadN)} · 5 % · Leervorführungen netto ${pvEuro(p.leerN)} · 10 %`,
+      pvEuro(p.pSonst),
+    ),
+  );
+  if (tl)
+    zeilen.push(
+      pvZeile(
+        "Teamprovision",
+        p.team.length ? `${p.team.filter((x, i, a) => a.findIndex((y) => y.id === x.id) === i).length} Mitglieder · Details unten` : "noch niemand eingetragen",
+        pvEuro(p.pTeam),
+      ),
+    );
+  zeilen.push(
+    pvZeile(
+      "Versicherungszuschuss",
+      `9 % RV ${pvEuro(p.zuschussRV)} · 5 % KV ${pvEuro(p.zuschussKV)}`,
+      "+ " + pvEuro(p.vers),
+    ),
+  );
   zeilen.push(pvZeile("Provision", "", pvEuro(p.prov + p.vers), "zwischen"));
   if (p.warenkredit) zeilen.push(pvZeile("K70 Warenkredit", "", "− " + pvEuro(p.warenkredit), "minus"));
   if (p.minus) zeilen.push(pvZeile("Minus aus dem Vormonat", "", "− " + pvEuro(p.minus), "minus"));
-  if (tl) zeilen.push(pvZeile("Teamprovision", `${team.length ? "aus deinem Team" : "noch niemand eingetragen"}`, "+ " + pvEuro(teamSumme)));
-  zeilen.push(pvZeile(tl ? "Überweisung inkl. Team" : "Überweisung", "", pvEuro(gesamt), "summe"));
+  zeilen.push(pvZeile("Überweisung", "", pvEuro(p.gesamt), "summe"));
   if (p.uebertrag)
     zeilen.push(pvZeile("Übertrag in den Folgemonat", "im nächsten Monat eintragen", "− " + pvEuro(p.uebertrag), "minus"));
 
-  /* Teamprovision getrennt nach Satz */
+  /* Teamprovision im Detail: je Mitglied und Satz */
+  const kwText = (w) => (w.length ? "KW " + (w.length > 1 ? w[0] + "–" + w[w.length - 1] : w[0]) : "noch keine Meldung");
   const teamHTML = tl
     ? `<section class="pvblock">
         <h2 class="pvh">Teamprovision</h2>
         ${
-          team.length
-            ? `<ul class="pvliste">${team
+          p.team.length
+            ? `<ul class="pvliste">${p.team
                 .map((x) =>
                   pvZeile(
                     entschaerfeText(x.name),
-                    `${x.wochen.length ? "KW " + (x.wochen.length > 1 ? x.wochen[0] + "–" + x.wochen[x.wochen.length - 1] : x.wochen[0]) + " · " : "noch keine Meldung · "}netto ${pvEuro(x.nettoUm)}`,
+                    `${kwText(x.wochen)} · Umsatz netto ${pvEuro(x.nettoUm)}`,
                     `<span class="pvsatz" data-keinzaehlen>${x.satz} %</span>${pvEuro(x.anteil)}`,
                     x.geteilt ? "geteilt" : "",
                   ),
                 )
-                .join("")}${pvZeile("Gesamt", "", pvEuro(teamSumme), "zwischen")}</ul>
+                .join("")}${pvZeile("Gesamt", "", pvEuro(p.pTeam), "zwischen")}</ul>
                <p class="pvnote">Den Satz wählst du jede Woche in der Wochenmeldung des Mitglieds. Wechselt er
-                 im Monat, stehen die Wochen getrennt.</p>`
+                 im Monat, stehen die Wochen getrennt. Der Versicherungszuschuss kommt auch auf die Teamprovision.</p>`
             : `<p class="pvnote">Lege unter <a href="#team">Teammitglieder</a> dein Team an und trag die
                  Wochenzahlen ein – dann erscheint hier deine Teamprovision.</p>`
         }
@@ -118,28 +147,30 @@ renderProv = function () {
           .map(
             (g) => `<li class="pvz tippbar"><button type="button" data-pvteil="${g.k}">
               <span class="pvzt">${entschaerfeText(g.name)}<small>${fmt(fromDk(g.tag))} · ${pvEuro(g.brutto)} brutto</small></span>
-              <b>${pzahl(g.vk)} % + ${pzahl(g.kt)} %</b></button></li>`,
+              <b>${[g.vk ? "Verkauf" : "", g.kt ? "Kontakt" : ""].filter(Boolean).join(" + ") || "nichts"}</b></button></li>`,
           )
           .join("")}</ul>
-        <p class="pvnote">Verkaufs- plus Kontaktprovision, die bei dir bleiben. Antippen zum Ändern.</p>
+        <p class="pvnote">Was du von der Basisprovision bekommst. Antippen zum Ändern.</p>
       </section>`
     : "";
 
   const kopf = `
     <div class="pvkopf">
       <p class="pveb">Vertriebsmonat ${vm.idx} · ${vm.quartal}. Quartal · KW ${vm.startW}–${vm.endW}</p>
-      <p class="pvlbl">${tl ? "Überweisung inkl. Team" : "Überweisung"}</p>
-      <p class="pvgross"><span>${pvGanz(gesamt)}</span><small>€</small></p>
-      <div class="pvmeter" role="progressbar" aria-label="Festgebiet netto zur höchsten Bonusstufe"
+      <p class="pvlbl">Überweisung</p>
+      <p class="pvgross"><span>${pvGanz(p.gesamt)}</span><small>€</small></p>
+      <div class="pvmeter" role="progressbar" aria-label="Festgebiet netto zur höchsten Prämienstufe"
         aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}">
         <div class="pvbahn"><i data-ziel="${pct.toFixed(1)}"></i></div>${marken}</div>
-      <div class="pvmeta"><span>${p.stufe === "keine" ? "Noch keine Bonusstufe" : "Bonusstufe " + p.stufe}</span>
+      <div class="pvmeta"><span>${p.stufe === "keine" ? "Noch keine Prämie" : "Prämie " + p.stufe}</span>
         <span>${p.next ? `noch ${pvEuro(p.next.fehlt)} netto bis ${p.next.pct} %` : "höchste Stufe erreicht"}</span></div>
     </div>
     <section class="pvblock">
       <h2 class="pvh">Zusammensetzung</h2>
       <ul class="pvliste">${zeilen.join("")}</ul>
     </section>
+    ${teamHTML}
+    ${geteiltHTML}
     <section class="pvblock">
       <h2 class="pvh">Was wäre, wenn …</h2>
       <div class="pvwenn">
@@ -148,9 +179,8 @@ renderProv = function () {
         <button type="button" class="pvrund" data-pvwenn="1" aria-label="Ein Verkauf mehr">+</button>
       </div>
       <p class="pvnote" id="pvTipp"></p>
+      <p class="pvnote" id="pvWie"></p>
     </section>
-    ${teamHTML}
-    ${geteiltHTML}
     <h2 class="pvh pvdetail">Details</h2>`;
   box.insertAdjacentHTML("afterbegin", kopf);
 
@@ -158,8 +188,12 @@ renderProv = function () {
   const bahn = box.querySelector(".pvbahn i");
   if (bahn) requestAnimationFrame(() => requestAnimationFrame(() => (bahn.style.width = bahn.dataset.ziel + "%")));
 
-  /* Was wäre, wenn */
+  /* Was wäre, wenn – bis zu 25 Verkäufe mehr */
   const schnitt = pvSchnitt();
+  document.getElementById("pvWie").textContent =
+    `Gerechnet wird mit deinem Durchschnitt: ${pvEuro(schnitt.brutto)} brutto je Verkauf, ` +
+    `${Math.round(schnitt.fgAnteil * 100)} % davon im Festgebiet` +
+    (schnitt.n >= 2 ? ` (aus ${schnitt.n} Verkäufen der letzten 26 Wochen).` : " (Startwert, bis es eigene Verkäufe gibt).");
   const wennSetzen = () => {
     const e = pvWenn;
     const u2 = Object.assign({}, u, {
@@ -168,21 +202,20 @@ renderProv = function () {
     });
     const p2 = provision(u2, vm.weeks);
     document.getElementById("pvWennT").textContent = e
-      ? `+${e} ${e === 1 ? "Verkauf" : "Verkäufe"} · ${pvEuro(p2.gesamt + teamSumme)}`
+      ? `+${e} ${e === 1 ? "Verkauf" : "Verkäufe"} · ${pvEuro(p2.gesamt)}`
       : "so wie jetzt";
-    document.getElementById("pvWennS").textContent = e ? `+ ${pvEuro(p2.gesamt - p.gesamt)} mehr` : "Tippe auf +";
+    document.getElementById("pvWennS").textContent = e ? `+ ${pvEuro(p2.gesamt - p.gesamt)} mehr` : "Tippe auf + (gedrückt halten geht schneller)";
     const nettoFG = netto(schnitt.brutto) * schnitt.fgAnteil;
     const tipp = document.getElementById("pvTipp");
     if (p2.next && nettoFG > 0) {
       const noch = Math.ceil(p2.next.fehlt / nettoFG);
-      tipp.textContent = `${noch} ${noch === 1 ? "Verkauf" : "Verkäufe"} mehr im Festgebiet und du erreichst ${p2.next.pct} % Bonus.`;
-    } else tipp.textContent = "Höchste Bonusstufe – jeder weitere Verkauf zählt voll.";
-    tipp.title = `Gerechnet mit ${pvEuro(schnitt.brutto)} brutto je Verkauf.`;
+      tipp.textContent = `${noch} ${noch === 1 ? "Verkauf" : "Verkäufe"} mehr im Festgebiet und du erreichst ${p2.next.pct} % Prämie.`;
+    } else tipp.textContent = "Höchste Prämienstufe – jeder weitere Verkauf zählt voll.";
   };
   box.querySelectorAll("[data-pvwenn]").forEach(
     (b) =>
       (b.onclick = () => {
-        pvWenn = Math.max(0, Math.min(10, pvWenn + +b.dataset.pvwenn));
+        pvWenn = Math.max(0, Math.min(25, pvWenn + +b.dataset.pvwenn));
         wennSetzen();
       }),
   );

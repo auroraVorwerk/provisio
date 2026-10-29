@@ -179,7 +179,7 @@
     const closeVor = window.closeModal;
     window.closeModal = function () {
       const offen = modal && modal.classList.contains("open");
-      if (offen && an()) sicher(geistZeigen);
+      /* kein Geisterbild mehr: es blitzte als zweites Fenster kurz auf */
       const r = closeVor.apply(this, arguments);
       if (offen && an() && letzterPrimaer && Date.now() - letzterPrimaer.zeit < 1600) {
         const text = passendeMeldung(letzterPrimaer.text);

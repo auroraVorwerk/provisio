@@ -557,10 +557,20 @@
   }
 
   /* ---------- Fensterinhalt gestaffelt ---------- */
+  let fensterSig = "";
   function fensterBeleben() {
     if (!an()) return;
     const k = document.querySelector("#sheet .sheetkoerper");
     if (!k) return;
+    /* Nur wenn ein neues Fenster oder ein neuer Schritt kommt – nicht bei jeder Eingabe */
+    const t = document.getElementById("mTitle");
+    const sig = [
+      t ? t.textContent : "",
+      typeof step !== "undefined" ? step : "",
+      typeof draft !== "undefined" && draft ? draft.nbSchritt : "",
+    ].join("|");
+    if (sig === fensterSig && modal.classList.contains("open")) return;
+    fensterSig = sig;
     [...k.children].forEach((el, i) => {
       el.classList.remove("fensterteil");
       void el.offsetWidth;
@@ -587,6 +597,14 @@
         } catch (e) {}
       });
       return r;
+    };
+  }
+
+  if (typeof window.closeModal === "function") {
+    const closeVorSig = window.closeModal;
+    window.closeModal = function () {
+      fensterSig = "";
+      return closeVorSig.apply(this, arguments);
     };
   }
 

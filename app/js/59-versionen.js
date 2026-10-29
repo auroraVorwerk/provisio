@@ -7,6 +7,46 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.1",
+    datum: "Oktober 2026",
+    kurz: "Serientermine, Rückgängig, Verkäufe und Provision neu",
+    teile: [
+      [
+        "Neu",
+        [
+          "Serientermine: Meeting, Privat, Individuell und Büro täglich, werktags oder wöchentlich – immer 52 Wochen im Voraus. Beim Löschen: nur dieser oder alle zukünftigen.",
+          "Rückgängig im Planer für versehentlich Gelöschtes oder Angelegtes.",
+          "Aus Chat einfügen: eine Terminzeile aus dem Chat mit Claude direkt eintragen.",
+          "Verkäufe: Leadverkauf (5 %), Leervorführung (10 %) und Eigenkauf neben dem Distanzverkauf.",
+          "Provision mit Versicherungszuschuss (9 % RV + 5 % KV), Sonstiges und Teamprovision im Detail; „Was wäre, wenn“ bis +25.",
+          "Team: nur noch 10, 6 oder 4 %; erwarteter Umsatz und Einheiten rechnen sich aus deinen bisherigen Meldungen.",
+          "Langzeitziel als bunter Balken auf der Heute-Seite; Ziele als Säulen nebeneinander.",
+          "Must-have-K70-Artikel in den Einstellungen.",
+          "Plus und Minus gedrückt halten zählt immer schneller.",
+        ],
+      ],
+      [
+        "Verbessert",
+        [
+          "Provisionsaufteilung als zwei Häkchen direkt unter dem Bruttoumsatz.",
+          "Nachbereitung: erst K70, dann Kauf; Status nur am Anfang; keine Aufbau-Animation bei jeder Eingabe.",
+          "Promotion: Ziel zählt Termine und Kontakte; rund 65 % der Kontakte fließen in die Prognose.",
+          "Nicht angetroffen bleibt im Planer stehen. Terminierungen zeigen ihre echte Zeit.",
+          "Abholtermin zählt Verkäufe nicht mehr doppelt.",
+          "Statistik-PDF hell mit farbigen Spaltenköpfen; Säulen flach.",
+          "Klareres Glas in der Leiste, Fenster ohne Glas, größere Seitenränder.",
+        ],
+      ],
+      [
+        "Entfernt",
+        [
+          "Sonne oben, Woche kopieren, Jobtickets, Trichter, Hilfe und Rundgang.",
+          "Mindestbestand und Nachbestellliste, Wetter, „Für Kundenberater geschrieben“, „Termin startet jetzt“.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.0",
     datum: "Oktober 2026",
     kurz: "Neues Design und geteilte Provision",

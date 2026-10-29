@@ -144,6 +144,7 @@ nbTermForm = function (e) {
     <div class="grp">
       ${zaehlZeile("einheiten", "Einheiten", n.einheiten)}
       ${fld("umsatzMesse", "Bruttoumsatz €", n.umsatzMesse, "text", 'inputmode="decimal"')}
+      ${num(n.umsatzMesse) > 0 ? provHakenHTML(n) : ""}
       <p class="hinweis" style="margin:8px 0 0">20 % Provision, ohne Bonusstufe.
         Kein Gebiet – Messeumsatz zählt weder auf Festgebiet noch auf Weißgebiet.</p>
     </div>`;

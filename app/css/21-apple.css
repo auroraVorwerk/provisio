@@ -1322,3 +1322,682 @@ html body .page .btn.primary::before,
 html body .page .btn.primary::after {
   box-shadow: none !important;
 }
+
+/* ===================== Beta 1.1 ===================== */
+
+/* Kopf: keine Knöpfe mehr – nur ein Glasstreifen hinter der Statusleiste */
+html body .topbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: env(safe-area-inset-top) !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: var(--glas-dicht) !important;
+  -webkit-backdrop-filter: var(--glasblur) !important;
+  backdrop-filter: var(--glasblur) !important;
+  z-index: 45 !important;
+}
+html body .topbar > :not(.rechts),
+html body .topbar .rechts > :not(.savestate.warn) {
+  display: none !important;
+}
+html body .topbar .savestate.warn {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 8px);
+  right: 16px;
+  padding: 6px 12px !important;
+  border-radius: 999px;
+  background: var(--glas) !important;
+}
+html body .wrap {
+  padding-top: calc(env(safe-area-inset-top) + 14px) !important;
+  padding-left: max(20px, env(safe-area-inset-left)) !important;
+  padding-right: max(20px, env(safe-area-inset-right)) !important;
+}
+html body .hero {
+  padding-top: 0 !important;
+}
+
+/* Untere Leiste: klares Glas wie bei Apple – man sieht durch */
+:root {
+  --leiste: rgba(255, 255, 255, 0.07);
+  --leisteblur: blur(14px) saturate(200%) brightness(1.08);
+}
+body.hell {
+  --leiste: rgba(255, 255, 255, 0.38);
+}
+html.glas-aus {
+  --leiste: #132235;
+  --leisteblur: none;
+}
+html.glas-aus body.hell {
+  --leiste: #ffffff;
+}
+html body .tabbar {
+  background: var(--leiste) !important;
+  -webkit-backdrop-filter: var(--leisteblur) !important;
+  backdrop-filter: var(--leisteblur) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.16),
+    0 12px 32px rgba(0, 0, 0, 0.28) !important;
+}
+body.hell .tabbar {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.08),
+    0 12px 32px rgba(20, 40, 70, 0.16) !important;
+}
+html body .tabbar .pvpille {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+body.hell .tabbar .pvpille {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 8px rgba(20, 40, 70, 0.12);
+}
+
+/* Fenster: massiv, ohne Glas und ohne Unschärfe dahinter */
+html body #modal .sheet {
+  background: var(--surface) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+body.hell #modal .sheet {
+  background: #f2f4f8 !important;
+}
+html body #modal .back,
+html[data-anim] #modal.open .back {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Kein zweites, helleres Feld hinter Text innerhalb einer Gruppe */
+html body .grp .sect,
+html body .grp .zzeile,
+html body .grp .field,
+html body .grp .lb,
+html body .grp label,
+html body .grp .row2,
+html body .grp .hinweis,
+html body .grp .aline,
+html body .grp .rszeile,
+html body .nbblock .sect,
+html body .nbblock .zzeile,
+html body .nbblock .field {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Heute: Liste unter dem Zeitstrahl entfällt, Köpfe bündig */
+html body #heute .htag {
+  display: none !important;
+}
+html body #heute .htlkopf,
+html body #heute .htkopf {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+}
+html body #heute .mheute,
+html body #heute .munter,
+html body #heute .hleer {
+  text-align: center;
+}
+html body #heute .hleer .mini {
+  margin: 10px auto 0;
+  display: inline-flex;
+}
+
+/* Heute: Langzeitziel als bunter Balken */
+.mlz-heutebalken {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 30px 0 6px;
+  padding: 18px 18px 16px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--gruppe);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.lzh-kopf,
+.lzh-fuss {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.lzh-kopf b {
+  font-size: 17px;
+  font-weight: 600;
+}
+.lzh-kopf span,
+.lzh-fuss span {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.lzh-fuss b {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.lzh-bahn {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--fill2);
+  overflow: hidden;
+}
+.lzh-bahn i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #77cdf5, #3b9bf0 35%, #9a6ce8 70%, #f2b33d);
+  transition: width 1.1s var(--feder);
+}
+.lzh-bahn i.an {
+  width: var(--p);
+}
+
+/* Planer: Plus-Knopf unten in der Leiste, Titel der Kacheln oben */
+body[data-page="planer"] .tabbar {
+  right: calc(14px + 66px + 10px) !important;
+}
+html body .gpfab {
+  bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+  right: 14px !important;
+  width: 66px !important;
+  height: 66px !important;
+  z-index: 52 !important;
+  color: #fff !important;
+  background: var(--accent) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 10px 26px rgba(0, 0, 0, 0.3) !important;
+}
+.gp .gpblock .gptxt:not(.oben):not(.unten) {
+  top: 5px !important;
+  bottom: auto !important;
+}
+.planaktionen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0 8px;
+}
+.planakt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--fill);
+  color: var(--accent);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.planakt:disabled {
+  color: var(--faint);
+  opacity: 0.6;
+  cursor: default;
+}
+.chatvor {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.chatvor span {
+  color: var(--muted);
+  font-size: 14px;
+}
+#chatText {
+  min-height: 96px;
+  font-size: 15px !important;
+  padding: 12px !important;
+  line-height: 1.4;
+}
+/* Wiederholen: vier Möglichkeiten */
+.ioseg.klein4 {
+  height: 36px;
+  margin-bottom: 4px;
+}
+.ioseg.klein4 button {
+  font-size: 13px;
+}
+#sheet .ioseg {
+  background: var(--fill2);
+}
+
+/* Provisions-Häkchen unter dem Bruttoumsatz */
+.provhaken .phgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.phk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--fill);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.phk i {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1.5px var(--faint);
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.phk[aria-pressed="true"] i {
+  background: var(--accent);
+  box-shadow: none;
+}
+.phk[aria-pressed="true"] i::after {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translateY(-1px) rotate(-45deg);
+}
+.phk span {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.phk small {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Nichtkauf-Gründe: ordentliches Raster */
+html body .nkchips,
+html body .checks.gruende2 {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+html body .nkchip,
+html body .checks.gruende2 button {
+  width: 100%;
+  min-height: 48px;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  padding: 8px 10px !important;
+  font-size: 14px !important;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal !important;
+}
+
+/* Verkäufe: vier Wege als 2 × 2 */
+.vkwege {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0 6px;
+}
+.vkweg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  min-height: 72px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--gruppe);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vkweg b {
+  font-size: 16px;
+  font-weight: 600;
+}
+.vkweg span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.vkweg:active {
+  opacity: 0.7;
+}
+
+/* Team: Karten mit festen Knöpfen unten */
+.tmliste {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+.tmkarte {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--gruppe);
+}
+.tmkopf b {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+}
+.tmkopf small {
+  font-size: 13px;
+  color: var(--muted);
+}
+.tmknoepfe {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.tmknoepfe .mini {
+  min-height: 40px;
+  justify-content: center;
+  text-align: center;
+}
+.tmknoepfe .mini.primaer {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+html body #page-team .teambar .btn {
+  width: 100%;
+}
+
+/* K70: Must-have wird in den Einstellungen gepflegt, nicht in der Inventur */
+html body .invzeile .markbox {
+  display: none !important;
+}
+
+/* Statistik: flache 2D-Säulen statt 3D */
+html body .msaeulen.u3szene {
+  perspective: none !important;
+  gap: 12px !important;
+}
+html body .u3box,
+html body .u3box:not(.mleer) {
+  transform: none !important;
+  transform-style: flat !important;
+  border-radius: 6px 6px 2px 2px;
+  overflow: hidden;
+  animation: none !important;
+}
+html body .u3s,
+html body .u3t {
+  display: none !important;
+}
+html body .u3v {
+  transform: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body .u3sp.heute .u3box {
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 0 0 3.5px var(--accent);
+}
+html[data-anim]:not([data-anim="aus"]) .mstat .u3box:not(.mleer) {
+  animation: saeuleHoch 0.7s var(--feder) both !important;
+  animation-delay: calc(var(--mi, 0) * 50ms) !important;
+  transform-origin: bottom center;
+}
+@keyframes saeuleHoch {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Kennzahlen überall gleich groß */
+html body .page:not(#page-planer) .kpi .kv,
+html body .page:not(#page-planer) .kpi.hero .kv {
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+}
+html body .page:not(#page-planer) .kpi.hero {
+  background: transparent !important;
+}
+html body .page:not(#page-planer) .jahr .kpi,
+html body .page:not(#page-planer) #jahr .kpi,
+html body #ausw .kpi {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Ziele: Säulen nebeneinander, kein Medaillen-Kopf */
+html body #ziele .mziel,
+html body #ziele .mheld.mziel {
+  display: none !important;
+}
+.zsaeulen {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+  align-items: start;
+}
+html body .zziel.zsaeulenziel {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  max-width: 160px;
+}
+.zsec > .zsaeulenziel {
+  margin: 12px auto 0 !important;
+}
+.zsaeule {
+  position: relative;
+  width: 100%;
+  max-width: 64px;
+  height: 150px;
+  border-radius: 12px;
+  background: var(--fill2);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.zsaeule i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--soll);
+  background: linear-gradient(0deg, #3b9bf0, #77cdf5);
+  border-radius: 12px 12px 0 0;
+  transform-origin: bottom;
+  animation: saeuleHoch 0.9s var(--feder) both;
+}
+.zziel.erreicht .zsaeule i {
+  background: linear-gradient(0deg, #2e9d63, #a9d18e);
+}
+.zpct {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.zwert {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.zvon {
+  font-size: 12px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.ztitel {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.zhin {
+  font-size: 11px;
+  color: var(--faint);
+  line-height: 1.3;
+}
+html[data-anim="aus"] .zsaeule i {
+  animation: none;
+}
+
+/* Statistik-PDF: helles Blatt mit farbigen Spaltenköpfen wie die Vorlage */
+@media print {
+  body.drucke-stat,
+  html:has(body.drucke-stat) {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f2f5f8;
+    --surface-3: #e8edf3;
+    --line: #d9e0e8;
+    --line-soft: #e6ebf0;
+    --text: #17212b;
+    --muted: #5d6b7a;
+    --faint: #8794a2;
+    --fill: #f2f5f8;
+    --z0: #ffffff;
+    --z1: #f6f8fa;
+    background: #ffffff !important;
+    color: #17212b !important;
+  }
+  body.drucke-stat .druckstat,
+  body.drucke-stat .dsblatt,
+  body.drucke-stat .dsinner {
+    background: #ffffff !important;
+    color: #17212b !important;
+  }
+  body.drucke-stat .stat,
+  body.drucke-stat .stat td,
+  body.drucke-stat .stat th:not(.vh) {
+    background: #ffffff !important;
+    color: #17212b !important;
+    border-color: #e3e8ee !important;
+  }
+  body.drucke-stat .stat tr.z1 td:not(.tick):not(.cnt) {
+    background: #f7f9fb !important;
+  }
+  body.drucke-stat .stat thead tr.grp th {
+    color: #7a8794 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid #cfd7df !important;
+  }
+  body.drucke-stat .stat th.vh {
+    border-radius: 6px !important;
+    color: #17212b !important;
+  }
+  body.drucke-stat .stat th.vh:not([style]) {
+    background: #e9eef3 !important;
+  }
+  body.drucke-stat .stat th.col-num,
+  body.drucke-stat .stat th.col-alt,
+  body.drucke-stat .stat th.col-time,
+  body.drucke-stat .stat th.col-name {
+    background: #e7f1ea !important;
+    color: #17212b !important;
+    border-radius: 6px !important;
+  }
+  body.drucke-stat .stat tr.dayrow td {
+    background: #ffffff !important;
+  }
+  body.drucke-stat .stat tr.dayrow span {
+    background: #cfe8d3 !important;
+    color: #1d4d2a !important;
+    border-radius: 999px !important;
+    font-weight: 700;
+  }
+  body.drucke-stat .stat td.vsep,
+  body.drucke-stat .stat th.vsep {
+    background: #ffffff !important;
+    border-left: 2px solid #2b3540 !important;
+  }
+  body.drucke-stat .dskopf {
+    color: #17212b !important;
+  }
+}
+@media print {
+  body.drucke-stat .stat th.vh[style] {
+    background: var(--vhc, #e9eef3) !important;
+  }
+  body.drucke-stat .stat td.tick[style],
+  body.drucke-stat .stat td.cnt[style] {
+    background: color-mix(in srgb, var(--tc, #cfd7df) 30%, #ffffff) !important;
+    color: #17212b !important;
+  }
+  body.drucke-stat .stat td.tick.nein[style] {
+    background: #ffffff !important;
+    color: #9aa5b1 !important;
+  }
+}
+@media print {
+  body.drucke-stat .stat thead tr.grp th.empty {
+    background: #ffffff !important;
+  }
+}
+html body #heute .htlkopf h3,
+html body #heute .htkopf h3,
+html body #heute .uh {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+html body #heute .htlkopf h3::before,
+html body #heute .htkopf h3::before {
+  display: none !important;
+}
+html body .untergross {
+  display: block !important;
+  text-align: left !important;
+}
+html body.hell .tabbar .tabmehr,
+html body.hell .tabbar .tab {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}

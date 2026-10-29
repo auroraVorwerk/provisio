@@ -91,6 +91,7 @@ function kommendeAnrufe() {
  * Wochenziel an Kundenterminen aus dem Provisionswunsch; die nötigen
  * Terminierungsblöcke ergeben sich aus den eigenen Quoten.
  */
+const PROMO_KONTAKT_QUOTE = 0.65;
 function vorbereitung() {
   /*
    * Bewusst zwei Zeiträume: Kundentermine zählen für die kommende Woche (Ziel),
@@ -124,11 +125,13 @@ function vorbereitung() {
   const zielTermine = Math.round(wunschWerte().tWoche || 0);
   const q = quoten(rangeWeeks);
   const proFGB = q.fgb.n ? q.fgb.termine / q.fgb.n : 0;
-  const proPromo = q.promo.n ? q.promo.termine / q.promo.n : 0;
+  /* Promotion: Termine plus Kontakte – rund 65 % der Kontakte werden später zum Termin */
+  const promoErtrag = q.promo.termine + PROMO_KONTAKT_QUOTE * (q.promo.kontakte || 0);
+  const proPromo = q.promo.n ? promoErtrag / q.promo.n : 0;
   const luecke = Math.max(0, zielTermine - termine);
 
   /* Die Lücke verteilt sich nach der tatsächlichen Herkunft bisheriger Termine. */
-  const summe = q.fgb.termine + q.promo.termine;
+  const summe = q.fgb.termine + promoErtrag;
   const anteilFGB = summe ? q.fgb.termine / summe : 1;
 
   const zielFGB = proFGB ? Math.ceil((luecke * anteilFGB) / proFGB) : null;

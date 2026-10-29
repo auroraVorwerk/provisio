@@ -6,17 +6,19 @@
 
 /* ---------- 1 · Gründe ---------- */
 const NK_LISTE = [
-  ["will 0 %", "#F2B33D"],
-  ["will 2. Akku", "#77CDF5"],
-  ["will „alt gegen neu“", "#E8C4F2"],
-  ["wartet auf Urlaubsgeld", "#A9D18E"],
-  ["muss mit Partner sprechen", "#9A6CE8"],
+  ["keine Zinsen", "#F2B33D"],
   ["passt finanziell aktuell nicht", "#E0402F"],
+  ["2. Akku gratis", "#77CDF5"],
+  ["will „alt gegen neu“", "#E8C4F2"],
+  ["muss mit Partner sprechen", "#9A6CE8"],
   ["muss nochmal überlegen", "#8FBF9F"],
-  ["wenn vorhandenes Gerät kaputt geht", "#6FC3A0"],
   ["sieht keinen Bedarf", "#9FB4E8"],
+  ["wenn vorhandenes Gerät kaputt geht", "#6FC3A0"],
   ["wartet auf den Nachfolger", "#D8C48A"],
 ];
+/* Frühere Bezeichnungen – werden beim Laden umbenannt (siehe 62-beta11.js) */
+const NK_UMBENANNT = { "will 0 %": "keine Zinsen", "will 2. Akku": "2. Akku gratis" };
+NK_FARBE["wartet auf Urlaubsgeld"] = "#A9D18E";
 NK_GRUENDE.splice(0, NK_GRUENDE.length, ...NK_LISTE.map((x) => x[0]));
 NK_LISTE.forEach(([g, c]) => {
   NK_FARBE[g] = c;

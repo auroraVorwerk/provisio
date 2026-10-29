@@ -150,8 +150,8 @@ function bestOf(list, groupFn, order) {
 function fazit(list, was) {
   if (list.length < 2)
     return `<p class="fazit leer">Für eine Aussage zum besten Zeitpunkt braucht es mehr Einsätze — aktuell ${list.length === 1 ? "ist einer" : "sind keine"} erfasst.</p>`;
-  const w = bestOf(list, (x) => x.n.wetter, WETTER);
-  const t = bestOf(list, (x) => x.n.temp, TEMPS);
+  const w = null; // Wetter wird nicht mehr erfasst
+  const t = null;
   const d = bestOf(list, (x) => DAYS_L[x.wd], DAYS_L);
   const z = bestOf(list, (x) => tageszeit(x.n), TAGESZEIT);
   if (!w && !t && !d && !z) return `<p class="fazit leer">Noch keine auswertbaren Einsätze.</p>`;

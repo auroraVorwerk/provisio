@@ -184,6 +184,48 @@ function profilUnterseite() {
   );
 }
 
+/* ---------- Must-have-K70-Artikel ---------- */
+function mustHaveZahl() {
+  return (katalog.liste || []).reduce((s, k) => s + (k.artikel || []).filter((a) => a.top).length, 0);
+}
+function mustHaveUnterseite() {
+  const liste = katalog.liste || [];
+  unterseiteOeffnen(
+    "Must-have-Artikel",
+    "Einstellungen",
+    `<p class="esfuss" style="margin:0 4px 6px">Was eingeschaltet ist, steht in der K70-Inventur hervorgehoben.</p>
+     ${liste
+       .map(
+         (k, ki) => `<p class="esgh">${entschaerfeText(k.kat)}</p>
+       <div class="esgrp">${(k.artikel || [])
+         .map(
+           (a, ai) =>
+             `<label class="esz"><span class="eszt">${entschaerfeText(a.n)}</span>
+              <input type="checkbox" role="switch" class="ioswitch" data-must="${ki}|${ai}"${a.top ? " checked" : ""}></label>`,
+         )
+         .join("")}</div>`,
+       )
+       .join("")}`,
+    (ebene) =>
+      ebene.querySelectorAll("[data-must]").forEach(
+        (f) =>
+          (f.onchange = () => {
+            const [ki, ai] = f.dataset.must.split("|").map(Number);
+            const a = ((katalog.liste || [])[ki] || {}).artikel[ai];
+            if (!a) return;
+            if (f.checked) a.top = 1;
+            else delete a.top;
+            store.set("bw-katalog", katalog.liste);
+            const em = document.querySelector("#esMusthave em");
+            if (em) em.textContent = mustHaveZahl() + " an";
+            try {
+              renderInventur();
+            } catch (e) {}
+          }),
+      ),
+  );
+}
+
 /* ---------- Hauptseite ---------- */
 renderProfil = async function () {
   const box = document.getElementById("profil");
@@ -252,9 +294,12 @@ renderProfil = async function () {
       <div class="esgrp">${esZeile("esLeeren", "Alle Einträge zurücksetzen", "", "rot")}</div>
       <input type="file" id="pfDatei" accept=".json,application/json" hidden>
 
+      <p class="esgh">K70</p>
+      <div class="esgrp">${esZeile("esMusthave", "Must-have-Artikel", mustHaveZahl() + " an")}</div>
+      <p class="esfuss">Diese Artikel sind in der Inventur hervorgehoben.</p>
+
       <p class="esgh">Info</p>
       <div class="esgrp">
-        ${esZeile("esHilfe", "Hilfe")}
         ${esZeile("esVersionen", "Versionsverlauf", (neu ? '<i class="esneu" aria-label="Neu"></i>' : "") + VERSIONEN[0].v)}
       </div>
       <div class="esgrp">${esZeile("esAbmelden", "Abmelden", "", "rot")}</div>
@@ -315,7 +360,7 @@ renderProfil = async function () {
   $("esEinspielen").onclick = () => datei.click();
   datei.onchange = () => sicherungEinspielen(datei);
   $("esLeeren").onclick = allesZuruecksetzen;
-  $("esHilfe").onclick = () => (location.hash = "faq");
+  $("esMusthave").onclick = mustHaveUnterseite;
   $("esVersionen").onclick = versionenUnterseite;
   $("esAbmelden").onclick = () => {
     if (confirm("Abmelden? Deine Daten bleiben verschlüsselt auf dem Gerät.")) logout();
@@ -347,3 +392,19 @@ function leistenPille() {
 }
 addEventListener("hashchange", () => requestAnimationFrame(leistenPille));
 addEventListener("load", () => setTimeout(leistenPille, 200));
+
+/* Druckblatt: Spaltenfarben als Variablen mitgeben – die App-Ansicht blendet Hintergründe aus */
+if (typeof druckBlattBauen === "function") {
+  const druckBlattOhneFarben = druckBlattBauen;
+  druckBlattBauen = function () {
+    const r = druckBlattOhneFarben.apply(this, arguments);
+    document.querySelectorAll("#druckStat th.vh").forEach((th) => {
+      const c = th.style.background || th.style.backgroundColor;
+      if (c) th.style.setProperty("--vhc", c);
+    });
+    document.querySelectorAll("#druckStat td.tick, #druckStat td.cnt").forEach((td) => {
+      if (td.style.color) td.style.setProperty("--tc", td.style.color);
+    });
+    return r;
+  };
+}

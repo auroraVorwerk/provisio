@@ -109,8 +109,15 @@ document.addEventListener("keydown", (e) => {
 
 function head(sub, zusatz = "") {
   const d = fromDk(draft.day);
+  /* Eigene Zeiten des Eintrags (z. B. Terminierung 16–21 Uhr) statt fester zwei Stunden */
+  const e = typeof entries !== "undefined" ? entries[key(draft.day, draft.hour)] : null;
+  const kurzZeit = (t) => String(t).replace(/:00$/, "");
+  const zeit =
+    e && e.bis
+      ? `${kurzZeit(e.start || e.von || pad(draft.hour))}–${kurzZeit(e.bis)}`
+      : `${pad(draft.hour)}–${pad(draft.hour + 2)}`;
   return `<header><div><h3 id="mTitle">${sub}</h3>
-    <div class="when">${DAYS_L[(d.getDay() + 6) % 7]}, ${fmtShort(d)} · ${pad(draft.hour)}–${pad(draft.hour + 2)} Uhr</div></div>
+    <div class="when">${DAYS_L[(d.getDay() + 6) % 7]}, ${fmtShort(d)} · ${zeit} Uhr</div></div>
     <button class="x" data-close aria-label="Schließen">✕</button>${zusatz}</header>`;
 }
 /* Fortschritt der Nachbereitung: Anzahl vollständiger Pflichtblöcke. */

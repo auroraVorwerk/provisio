@@ -134,9 +134,15 @@ function infoKarte(e) {
           e.nb && e.nb.einheiten ? ` · erreicht: <b>${e.nb.einheiten}</b>` : ""
         }</div>`
       : e.kind === "terminieren" && e.ziel
-        ? `<div class="tziel">Ziel: <b>${e.ziel} Termin${e.ziel === 1 ? "" : "e"}</b>${
-            e.nb && e.nb.termine ? ` · erreicht: <b>${e.nb.termine}</b>` : ""
-          }</div>`
+        ? e.quelle === "Promotion"
+          ? `<div class="tziel">Ziel: <b>${e.ziel} Termine und Kontakte</b>${
+              e.nb && (e.nb.termine || e.nb.kontakte)
+                ? ` · erreicht: <b>${(+e.nb.termine || 0) + (+e.nb.kontakte || 0)}</b>`
+                : ""
+            }</div>`
+          : `<div class="tziel">Ziel: <b>${e.ziel} Termin${e.ziel === 1 ? "" : "e"}</b>${
+              e.nb && e.nb.termine ? ` · erreicht: <b>${e.nb.termine}</b>` : ""
+            }</div>`
         : "";
   const knoepfe = kunde
     ? `<div class="actions">
@@ -182,13 +188,8 @@ function paintRoh() {
     if (e.kind === "kunde" || e.kind === "premium") {
       const st = draft.nb.status || e.status || "";
       const n0 = draft.nb;
-      const laufBtn = `<div class="laufzeile">
-          <button type="button" class="btn${n0.realStart ? "" : " primary"}" data-zeit="start">${n0.realStart ? "Start " + n0.realStart + " ✓" : "Termin startet jetzt"}</button>
-          <button type="button" class="btn${n0.realStart && !n0.realEnde ? " primary" : ""}" data-zeit="ende">${n0.realEnde ? "Ende " + n0.realEnde + " ✓" : "Termin ist beendet"}</button>
-        </div>`;
       extra =
         `<div class="hr"></div>` +
-        laufBtn +
         `<div class="h4">Status</div>` +
         (st && !draft.stEdit
           ? `<div class="statuszeile"><b>${st}</b><button type="button" class="mini" id="stChange">ändern</button></div>`
@@ -212,8 +213,11 @@ function paintRoh() {
         </div>${error ? `<div class="err">${error}</div>` : ""}
         <div class="actions"><button class="btn primary" id="doMove">Termin verschieben</button></div>`;
       if (st === "Abgesagt" || st === "Nicht da") {
-        extra += `<div class="hint" style="margin-top:14px">Der Zeitblock wird wieder frei. Der Kunde wandert mit seinen Daten
-          in die Potenzialliste, im Kalender bleibt an der Stelle ein kleines Zeichen.</div>`;
+        extra += `<div class="hint" style="margin-top:14px">${
+          st === "Nicht da"
+            ? "Der Termin bleibt im Kalender als „nicht angetroffen“ stehen. Der Kunde wandert mit seinen Daten in die Potenzialliste."
+            : "Der Zeitblock wird wieder frei. Der Kunde wandert mit seinen Daten in die Potenzialliste."
+        }</div>`;
         saveBtn = `<button class="btn danger" id="doCancel">${st === "Nicht da" ? "Als nicht angetroffen buchen" : "Termin absagen"}</button>`;
         ohneLoeschen = true;
       }
@@ -305,6 +309,16 @@ function paintRoh() {
       dc.onclick = () => {
         const art = draft.nb.status === "Nicht da" ? "nichtda" : "abgesagt";
         verlauf.push({ datum: draft.day, art });
+        if (art === "nichtda") {
+          /* Nicht angetroffen bleibt im Planer stehen */
+          e.status = "nichtda";
+          e.nb = { ...draft.nb, status: "Nicht da" };
+          if ((e.nachname || "").trim())
+            addPotenzial(e, [], "Kunde war beim Termin nicht da", draft.day);
+          closeModal();
+          renderAll();
+          return;
+        }
         insArchiv(draft.day, draft.hour, e, art);
         if ((e.kind === "kunde" || e.kind === "premium") && (e.nachname || "").trim())
           addPotenzial(
@@ -358,7 +372,6 @@ function paintRoh() {
        <button class="opt" data-kind="premium">Premium CheckIn</button>
        <button class="opt" data-kind="meeting">Meeting</button>
        <button class="opt" data-kind="privat">Privat</button>
-       <button class="opt" data-kind="eigenkauf">Eigenkauf</button>
        <button class="opt" data-kind="individuell">Individuell<small>eigene Bezeichnung und Farbe</small></button>`;
     sheet.querySelectorAll("[data-kind]").forEach(
       (b) =>
@@ -808,7 +821,7 @@ function paintRoh() {
        </div>
        <div class="sect"><span class="lb">Gebiet</span>${seg("gebiet2", ["Festgebiet", "Weißgebiet"], geb)}</div>
        <div class="h4">Ziel für diesen Einsatz</div>
-       <div class="grp">${zaehlZeile("zielTermine", "Termine", draft.nb.zielTermine)}</div>
+       <div class="grp">${zaehlZeile("zielTermine", "Termine und Kontakte", draft.nb.zielTermine)}</div>
        ${error ? `<div class="err">${error}</div>` : ""}
        <div class="actions"><button class="btn" data-back="termQuelle">Zurück</button><button class="btn primary" id="save">Speichern</button></div>
 `;

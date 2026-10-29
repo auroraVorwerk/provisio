@@ -104,10 +104,13 @@ function nbForm() {
     ) +
     `<div class="h4">Abschluss</div>
     <div class="grp">
+      <div class="sect"><span class="lb">K70 aus dem Kofferraum verkauft?</span>${seg("k70", ["Ja", "Nein"], n.k70)}
+        ${n.k70 === "Ja" ? fld("k70betrag", "Bruttoumsatz K70 €", n.k70betrag, "text", 'inputmode="decimal"') : ""}</div>
       <div class="sect"><span class="lb">Hat der Kunde gekauft?</span>${seg("verkauft", ["Ja", "Nein"], n.verkauft)}</div>
       ${
         n.verkauft === "Ja"
           ? `${zaehlZeile("einheiten", "Einheiten", n.einheiten)}${fld("umsatz", "Bruttoumsatz €", n.umsatz, "text", 'inputmode="decimal"')}
+      ${provHakenHTML(n)}
       <p class="hinweis" style="margin-top:0">Artikel ohne Einheiten? Dann Einheiten auf 0 lassen und nur den Umsatz eintragen.</p>
         <div class="sect"><span class="lb">Späteres Lieferdatum?</span>${seg("datiert", ["Ja", "Nein"], n.datiert)}
           ${
@@ -119,17 +122,7 @@ function nbForm() {
           }</div>`
           : ""
       }
-      <div class="sect"><span class="lb">K70 aus dem Kofferraum verkauft?</span>${seg("k70", ["Ja", "Nein"], n.k70)}
-        ${n.k70 === "Ja" ? fld("k70betrag", "Bruttoumsatz K70 €", n.k70betrag, "text", 'inputmode="decimal"') : ""}</div>
-    </div>
-    ${
-      istTeamleiter()
-        ? `<div class="grp">
-      <div class="sect"><span class="lb">Für Kundenberater geschrieben</span>${seg("fremd", ["Ja", "Nein"], n.fremd || "Nein")}</div>
-      <p class="hinweis">Bei „Ja“ zählt der Termin in deine Auswertung, der Umsatz fließt aber nicht in Provision und Boni.</p>
-    </div>`
-        : ""
-    }`;
+    </div>`;
 
   if (n.verkauft === "Ja") {
     h += `<div class="h4">Premium CheckIn vereinbaren</div>
@@ -176,27 +169,26 @@ function nbForm() {
 function nbPremiumForm() {
   const n = draft.nb;
   return `<div class="h4">Nachbereitung · Premium CheckIn</div>
-    ${nbBlock(
-      "zeit",
-      "Echte Zeiten",
-      `<div class="row2">
-         ${fld("realStart", "Gestartet", n.realStart || "", "time", 'step="300"')}
-         ${fld("realEnde", "Geendet", n.realEnde || "", "time", 'step="300"')}
-       </div>`,
-      n.realStart && n.realEnde ? `${n.realStart}–${n.realEnde}` : "",
-      true,
-    )}
+    <div class="h4">Echte Zeiten</div>
     <div class="grp">
+      <div class="row2">
+        ${fld("realStart", "Gestartet", n.realStart || "", "time", 'step="300"')}
+        ${fld("realEnde", "Geendet", n.realEnde || "", "time", 'step="300"')}
+      </div>
+    </div>
+    <div class="h4">Abschluss</div>
+    <div class="grp">
+      <div class="sect"><span class="lb">K70 abverkauft?</span>${seg("k70", ["Ja", "Nein"], n.k70)}
+        ${n.k70 === "Ja" ? fld("k70betrag", "Bruttoumsatz K70 €", n.k70betrag, "text", 'inputmode="decimal"') : ""}</div>
       <div class="sect"><span class="lb">Hat der Kunde etwas nachgekauft?</span>${seg("verkauft", ["Ja", "Nein"], n.verkauft)}</div>
       ${
         n.verkauft === "Ja"
           ? `
+        <div class="sect"><span class="lb">Gebiet</span>${seg("gebiet", ["Festgebiet", "Weißgebiet"], n.gebiet)}</div>
         ${zaehlZeile("einheiten", "Einheiten", n.einheiten)}${fld("umsatz", "Bruttoumsatz €", n.umsatz, "text", 'inputmode="decimal"')}
-        <div class="sect"><span class="lb">Gebiet</span>${seg("gebiet", ["Festgebiet", "Weißgebiet"], n.gebiet)}</div>`
+        ${provHakenHTML(n)}`
           : ""
       }
-      <div class="sect"><span class="lb">K70 abverkauft?</span>${seg("k70", ["Ja", "Nein"], n.k70)}
-        ${n.k70 === "Ja" ? fld("k70betrag", "Bruttoumsatz K70 €", n.k70betrag, "text", 'inputmode="decimal"') : ""}</div>
     </div>`;
 }
 function saveNbPremium(e) {
@@ -237,6 +229,7 @@ function abholForm(e) {
         <div class="sect"><span class="lb">Gebiet</span>${seg("gebiet", ["Festgebiet", "Weißgebiet"], n.gebiet)}</div>
         ${zaehlZeile("einheiten", "Einheiten", n.einheiten)}
         ${fld("umsatz", "Bruttoumsatz €", n.umsatz, "text", 'inputmode="decimal"')}
+        ${provHakenHTML(n)}
         <div class="sect"><span class="lb">K70 aus dem Kofferraum verkauft?</span>${seg("k70", ["Ja", "Nein"], n.k70)}
           ${n.k70 === "Ja" ? fld("k70betrag", "Bruttoumsatz K70 €", n.k70betrag, "text", 'inputmode="decimal"') : ""}</div>
         <p class="hinweis">Umsatz und Einheiten werden dem ursprünglichen Kundentermin zugeschrieben und
@@ -305,6 +298,10 @@ function saveAbhol(e) {
       u.k70betrag = n.k70betrag || "";
       u.datiert = "Ja"; // abgerechnet am Tag der Abholung
       u.lieferdatum = draft.day;
+      if (n.provVK !== undefined) u.provVK = n.provVK;
+      else delete u.provVK;
+      if (n.provKT !== undefined) u.provKT = n.provKT;
+      else delete u.provKT;
       u.besitz = [];
       u.grund = "";
       const id = [urspruenglich.vorname, urspruenglich.nachname, urspruenglich.str, urspruenglich.plz]
@@ -339,6 +336,14 @@ function saveAbhol(e) {
   }
   e.status = "nachbereitet";
   e.nb = { ...n };
+  /*
+   * Der Verkauf steht jetzt im ursprünglichen Kundentermin. Hier nur noch als
+   * Hinweis – sonst zählten Einheiten, Umsatz und K70 doppelt.
+   */
+  if (urspruenglich && urspruenglich.nb && n.verkauft === "Ja") {
+    e.nb.verkauft = "Übertragen";
+    if (e.nb.k70 === "Ja") e.nb.k70 = "Übertragen";
+  }
   closeModal();
   renderAll();
 }
@@ -360,9 +365,10 @@ function nbTermForm(e) {
           ["termine", "Termine"],
           ["rueck", "Rückmeldungstermine"],
         ];
-  const erreicht = +n.termine || 0;
+  const promo = e.quelle === "Promotion";
+  const erreicht = (+n.termine || 0) + (promo ? +n.kontakte || 0 : 0);
   const zielTxt = e.ziel
-    ? `<p class="hinweis" style="margin:0 0 10px">Ziel: <b>${e.ziel} Termin${e.ziel === 1 ? "" : "e"}</b> ·
+    ? `<p class="hinweis" style="margin:0 0 10px">Ziel: <b>${e.ziel} ${promo ? "Termine und Kontakte" : `Termin${e.ziel === 1 ? "" : "e"}`}</b> ·
         aktuell <b>${erreicht}</b>${erreicht >= e.ziel ? " — geschafft" : ` · noch ${e.ziel - erreicht}`}</p>`
     : "";
   return `<div class="h4">Nachbereitung · ${e.quelle}</div>
@@ -380,11 +386,6 @@ function nbTermForm(e) {
         ${fld("realEnde", "Geendet", n.realEnde || "", "time", 'step="300"')}
       </div>
     </div>
-    <div class="h4">Wetter</div>
-    <div class="grp">
-      <div class="sect"><span class="lb">Bedingungen</span>${seg("wetter", ["Sonnig", "Wolkig", "Regnerisch"], n.wetter)}</div>
-      <div class="sect"><span class="lb">Temperatur</span>${seg("temp", ["unter 0°C", "0–15°C", "15–25°C", "über 25°C"], n.temp)}</div>
-    </div>
     ${
       e.quelle === "Promotion"
         ? `
@@ -399,6 +400,7 @@ function nbTermForm(e) {
           ${fld("umsatzFG", "Bruttoumsatz Festgebiet €", n.umsatzFG, "text", 'inputmode="decimal"')}
           ${fld("umsatzWG", "Bruttoumsatz Weißgebiet €", n.umsatzWG, "text", 'inputmode="decimal"')}
         </div>
+        ${provHakenHTML(n)}
 `
           : ""
       }
@@ -447,7 +449,7 @@ function saveNb(e) {
     "#geraet",
     "kunde",
   );
-  f(!n.realStart || !n.realEnde, "echte Zeiten", '[data-zeit="start"]', "zeit");
+  f(!n.realStart || !n.realEnde, "echte Zeiten", "#realStart", "zeit");
   f(!n.empf, "Empfehlungen gefragt", '[data-seg="empf"]', "gespraech");
   f(
     n.empf === "Ja" && !n.empfErhalten,
@@ -487,7 +489,7 @@ function saveNb(e) {
   }
   if (n.realStart && n.realEnde && toDec(n.realEnde) <= toDec(n.realStart)) {
     error = "Die Endzeit muss nach der Startzeit liegen.";
-    draft.fokus = '[data-zeit="ende"]';
+    draft.fokus = "#realEnde";
     repaint();
     return;
   }

@@ -34,7 +34,7 @@
   function pruefen(id) {
     const n = draft.nb;
     if (id === "zeit" && !(n.realStart && n.realEnde))
-      return ["Bitte Start und Ende des Termins eintragen.", '[data-zeit="start"]'];
+      return ["Bitte Start und Ende des Termins eintragen.", "#realStart"];
     if (id === "kunde") {
       if (!n.kundenstatus) return ["Bitte die Kundenart wählen.", '[data-seg="kundenstatus"]'];
       if (!n.gebiet) return ["Bitte das Gebiet wählen.", '[data-seg="gebiet"]'];
@@ -111,7 +111,7 @@
       if (el.classList.contains("h4")) {
         const t = el.textContent.trim();
         if (phase === "vor" && /^Status/.test(t)) {
-          el.dataset.uschritt = "*";
+          el.dataset.uschritt = "start";
           nachStatus = true;
           return;
         }
@@ -126,7 +126,7 @@
       }
       if (phase === "vor") {
         if (nachStatus) {
-          el.dataset.uschritt = "*";
+          el.dataset.uschritt = "start"; // Status nur am Anfang zeigen
           nachStatus = false;
           return;
         }
@@ -185,11 +185,6 @@
       reihe.appendChild(save);
       save.hidden = false;
     }
-    const alle = document.createElement("button");
-    alle.type = "button";
-    alle.className = "uwizlink";
-    alle.textContent = "Alle Felder auf einmal";
-    fuss.appendChild(alle);
 
     const z = reihe.querySelector("#uwZurueck");
     if (z)
@@ -215,13 +210,6 @@
         if (navigator.vibrate) navigator.vibrate(8);
         repaint();
       };
-    alle.onclick = () => {
-      collect();
-      settings.nbSchritte = false;
-      saveData();
-      error = "";
-      repaint();
-    };
   }
   if (typeof window.paint === "function") {
     const vor = window.paint;
@@ -236,8 +224,8 @@
   /* ---------- Menü ---------- */
   const GRUPPEN = [
     ["Mein Tag", ["heute", "planer", "verkaeufe", "wiedervorlage"]],
-    ["Kunden", ["kunden", "potenzial", "empfehlung", "interessenten", "jobtickets"]],
-    ["Zahlen", ["statistik", "auswertungen", "trichter", "jahr"]],
+    ["Kunden", ["kunden", "potenzial", "empfehlung", "interessenten"]],
+    ["Zahlen", ["statistik", "auswertungen", "jahr"]],
     ["Geld und Ziele", ["provision", "wunsch", "ziele"]],
     ["Unterwegs", ["inventur", "fahrten"]],
   ];

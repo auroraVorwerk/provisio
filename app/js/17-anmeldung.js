@@ -229,7 +229,7 @@ async function lgWeiter() {
       loginEl.hidden = true;
       await zeigeWiederherstellungsCode(code);
       await starteSitzung(u);
-      return tourStart(true);
+      return; // kein Rundgang mehr beim ersten Start
     }
 
     /* ---- Passwort vergessen: mit dem Wiederherstellungs-Code neues Passwort setzen ---- */

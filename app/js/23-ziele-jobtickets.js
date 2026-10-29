@@ -69,6 +69,7 @@ function teamJahr(jahr) {
 }
 
 /* Ein Fortschrittsbalken für ein Ziel */
+/* Ein Ziel als senkrechte Säule – mehrere stehen nebeneinander */
 function zielBalken(titel, ist, ziel, einheit, hinweis) {
   const pct = ziel > 0 ? Math.min(100, Math.round((ist / ziel) * 1000) / 10) : 0;
   const fertig = ist >= ziel && ziel > 0;
@@ -76,10 +77,14 @@ function zielBalken(titel, ist, ziel, einheit, hinweis) {
     einheit === "€"
       ? eur(v) + " €"
       : `${Math.round(v * 10) / 10}`.replace(".", ",") + (einheit ? " " + einheit : "");
-  return `<div class="zziel${fertig ? " erreicht" : ""}">
-    <div class="zkopf"><span>${titel}</span><b>${z(ist)} / ${z(ziel)}</b></div>
-    <div class="zbalken"><i style="--soll:${pct}%"></i></div>
-    <div class="zfuss">${fertig ? "erreicht ✓" : `${pct} % · noch ${z(Math.max(0, ziel - ist))}`}${hinweis ? ` · ${hinweis}` : ""}</div>
+  return `<div class="zziel zsaeulenziel${fertig ? " erreicht" : ""}">
+    <div class="zsaeule" role="img" aria-label="${titel}: ${pct} Prozent"><i style="--soll:${pct}%"></i>
+      <span class="zpct" data-keinzaehlen>${fertig ? "✓" : Math.floor(pct) + " %"}</span></div>
+    <b class="zwert">${z(ist)}</b>
+    <span class="zvon">von ${z(ziel)}</span>
+    <span class="ztitel">${titel}</span>
+    ${hinweis ? `<small class="zhin">${hinweis}</small>` : ""}
+    ${fertig ? '<span class="zerreicht" hidden>erreicht ✓</span>' : ""}
   </div>`;
 }
 function zielGruppe(titel, unter, balken) {
@@ -87,7 +92,7 @@ function zielGruppe(titel, unter, balken) {
   return `<div class="asec zsec${erreicht ? " gewonnen" : ""}">
     <h3>${titel}${erreicht ? ' <span class="zhaken">erreicht</span>' : ""}</h3>
     <p class="sub">${unter}</p>
-    ${balken.join('<div class="zoder">oder</div>')}
+    <div class="zsaeulen" style="--n:${balken.length}">${balken.join("")}</div>
   </div>`;
 }
 

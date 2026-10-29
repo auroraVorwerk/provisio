@@ -148,17 +148,15 @@ function manuellDialog(id) {
   simpleDialog(
     id ? "Teammitglied bearbeiten" : "Teammitglied hinzufügen",
     "Die Wochenzahlen trägst du selbst ein",
-    `<div class="grp">${fld("tmmName", "Name", m.name || "")}
-       ${fld("tmmEinst", "Einstellungsdatum", m.einst || "", "date")}</div>
-     <p class="hinweis">Das Einstellungsdatum bestimmt den Satz der Teamprovision.</p>
+    `<div class="grp">${fld("tmmName", "Name", m.name || "")}</div>
+     <p class="hinweis">Deinen Anteil wählst du jede Woche in der Wochenmeldung des Mitglieds.</p>
      ${id ? `<div class="actions"><button type="button" class="btn gefahr" id="tmmWeg">Entfernen</button></div>` : ""}`,
     () => {
       const name = document.getElementById("tmmName").value.trim();
-      const einst = document.getElementById("tmmEinst").value;
       if (!name) return;
       if (id) {
-        Object.assign(m, { name, einst });
-      } else teamManuell().push({ id: "M" + Date.now().toString(36), name, einst });
+        Object.assign(m, { name: entschaerfeText(name) });
+      } else teamManuell().push({ id: "M" + Date.now().toString(36), name: entschaerfeText(name) });
       saveData();
       closeModal();
       renderTeamManuell();

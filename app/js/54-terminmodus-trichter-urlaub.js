@@ -362,11 +362,7 @@
   /* ---------- Trichter ---------- */
   PAGES.trichter = "Trichter";
   if (typeof IC !== "undefined") IC.trichter = '<path d="M4 5h16l-6 7v6l-4 2v-8z"/>';
-  (function () {
-    if (MENUE.some((m) => m[0] === "trichter")) return;
-    const i = MENUE.findIndex((m) => m[0] === "auswertungen");
-    MENUE.splice(i >= 0 ? i + 1 : MENUE.length, 0, ["trichter", "Trichter"]);
-  })();
+  /* Trichter steht nicht mehr im Menü (Beta 1.1) */
   (function () {
     if (document.getElementById("page-trichter")) return;
     const main = document.querySelector("main") || document.body;

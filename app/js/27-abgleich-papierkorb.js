@@ -51,11 +51,9 @@ const MENUE = [
   ["wunsch", "Provisionswunsch"],
   ["provision", "Provisionsrechner"],
   ["ziele", "Ziele"],
-  ["jobtickets", "Jobtickets"],
   ["fahrten", "Fahrtenbuch"],
   ["jahr", "Jahresrückblick"],
   ["profil", "Profil"],
-  ["faq", "Hilfe"],
 ];
 const MENUE_TL = [
   ["teammeldung", "Wochenmeldung"],

@@ -134,10 +134,9 @@
     if (!el) {
       el = document.createElement("div");
       el.className = "mlangziel";
-      const med = box.querySelector(".mziel");
-      if (med) med.after(el);
-      else box.prepend(el);
     }
+    /* Das eigene Hauptziel steht ganz unten auf der Ziele-Seite */
+    if (el !== box.lastElementChild) box.appendChild(el);
     const z = ziel();
     if (!z) {
       el.innerHTML = `<button class="mlz-leer" id="lzNeu">
@@ -173,7 +172,9 @@
   function heuteBlock() {
     const box = document.getElementById("heute");
     if (!box) return;
-    let el = box.querySelector(".mlz-heutekarte");
+    let el = box.querySelector(".mlz-heutebalken");
+    const alt = box.querySelector(".mlz-heutekarte");
+    if (alt) alt.remove();
     const z = ziel();
     if (!z) {
       if (el) el.remove();
@@ -182,26 +183,26 @@
     if (!el) {
       el = document.createElement("button");
       el.type = "button";
-      el.className = "mlz-heutekarte";
-      const nach = box.querySelector(".mheute") || box.querySelector(".hkompass");
-      if (nach) nach.after(el);
-      else box.prepend(el);
+      el.className = "mlz-heutebalken";
       el.onclick = () => {
         location.hash = "#ziele";
       };
     }
+    /* Ganz unten auf der Heute-Seite */
+    if (el !== box.lastElementChild) box.appendChild(el);
     const s = stand(z);
     el.innerHTML = `
-      <div class="mlz-hk-ring" style="--p:${s.pct.toFixed(1)}"><svg viewBox="0 0 44 44" aria-hidden="true">
-        <circle cx="22" cy="22" r="19" class="mlz-hk-spur"></circle>
-        <circle cx="22" cy="22" r="19" class="mlz-hk-wert" style="stroke-dashoffset:${(119.4 * (1 - s.pct / 100)).toFixed(1)}"></circle></svg>
-        <span data-keinzaehlen>${Math.floor(s.pct)}%</span></div>
-      <div class="mlz-hk-text">
-        <b>${esc(z.titel || "Langzeitziel")}</b>
-        <span>${ganz(s.summe)} € von ${ganz(s.betrag)} € · ${s.erreicht ? "geschafft" : "noch " + s.rest + " Tage"}</span>
-        ${s.erreicht || s.abgelaufen ? "" : `<small>Diese Woche: ${ganz(s.proWoche)} € Provision bringen dich hin</small>`}
-      </div>
-      <span class="mlz-hk-pfeil" aria-hidden="true">›</span>`;
+      <span class="lzh-kopf"><b>${esc(z.titel || "Mein Langzeitziel")}</b>
+        <span>${ganz(s.summe)} € von ${ganz(s.betrag)} €</span></span>
+      <span class="lzh-bahn"><i style="--p:${Math.max(2, s.pct).toFixed(1)}%"></i></span>
+      <span class="lzh-fuss"><b data-keinzaehlen>${Math.floor(s.pct)} % schon erreicht</b>
+        <span>${s.erreicht ? "geschafft" : s.abgelaufen ? "Zeitraum vorbei" : "noch " + s.rest + " Tage"}</span></span>`;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const i = el.querySelector(".lzh-bahn i");
+        if (i) i.classList.add("an");
+      }),
+    );
   }
 
   /* ---------------- Einhängen ---------------- */

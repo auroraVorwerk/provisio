@@ -38,7 +38,8 @@ function gpBloecke(day) {
   HOURS_ASC.forEach((h) => {
     const e = entries[key(day, h)];
     if (!e) return;
-    const fest = ["meeting", "privat", "individuell"].includes(e.kind);
+    /* Feste Blöcke ohne Ankunftsfenster – Titel steht oben (Terminieren und Büro gehören dazu) */
+    const fest = ["meeting", "privat", "individuell", "terminieren", "buero"].includes(e.kind);
     let von = h,
       bis = h + 2;
     if (!fest && e.kind === "terminieren" && e.bis) {

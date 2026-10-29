@@ -1,20 +1,16 @@
 /**
- * Teamleiter-Satz je Woche
+ * Team: Satz je Woche, Erwartung und Teamliste
  *
- * Bei jeder Wochenmeldung eines Teammitglieds wird gefragt, welchen Satz du
- * als Teamleiterin von ihm bekommst. Vorbelegt ist die letzte Angabe – wechselt
- * der Satz mitten im Vertriebsmonat (z. B. von 10 % auf 6 %), rechnet die
- * Teamprovision die Wochen getrennt.
+ * Bei jeder Wochenmeldung eines Teammitglieds wählst du deinen Anteil als
+ * Teamleiterin (10, 6 oder 4 %). Vorbelegt ist die letzte Angabe – wechselt
+ * der Satz mitten im Vertriebsmonat, rechnet die Teamprovision die Wochen
+ * getrennt. Erwarteter Umsatz und erwartete Einheiten der Folgewoche
+ * ergeben sich aus den bisherigen Meldungen (je Kundentermin) mal den
+ * geplanten Kundenterminen.
  * Gespeichert wird je Woche: teamMeldungen()[id][wochenKey].satz (Prozent).
  */
-const TL_SAETZE = [10, 8, 6, 5, 4, 2, 0];
+const TL_SAETZE = [10, 6, 4];
 
-/* Satz nach Betriebszugehörigkeit in einer bestimmten Woche – nur als Vorschlag */
-function satzNachEinstellung(m, wochenKey) {
-  if (!m || !m.einst) return null;
-  const wochen = Math.max(0, Math.floor((fromDk(wochenKey) - fromDk(m.einst)) / (7 * 864e5)) + 1);
-  return Math.round(tpSatz(wochen) * 100);
-}
 /* Letzte Angabe vor (oder in) dieser Woche */
 function letzterSatz(id, wochenKey) {
   const alle = teamMeldungen()[id] || {};
@@ -27,10 +23,29 @@ function satzFuer(id, wochenKey) {
   const w = (teamMeldungen()[id] || {})[wochenKey];
   if (w && w.satz !== undefined && w.satz !== "") return +w.satz;
   const l = letzterSatz(id, wochenKey);
-  if (l !== null) return l;
-  const m = teamManuell().find((x) => x.id === id);
-  const s = satzNachEinstellung(m, wochenKey);
-  return s === null ? 10 : s;
+  return l === null ? 10 : l;
+}
+
+/* Quote aus den bisherigen Meldungen: Umsatz und Einheiten je Kundentermin */
+function teamQuote(id, vorWoche) {
+  const alle = teamMeldungen()[id] || {};
+  let termine = 0,
+    umsatz = 0,
+    einheiten = 0,
+    wochen = 0;
+  Object.keys(alle)
+    .filter((k) => k < vorWoche)
+    .sort()
+    .slice(-12)
+    .forEach((k) => {
+      const w = alle[k] || {};
+      if (!(+w.termine > 0)) return;
+      termine += +w.termine;
+      umsatz += +w.umsatzNetto || 0;
+      einheiten += +w.einheiten || 0;
+      wochen++;
+    });
+  return termine ? { umsatz: umsatz / termine, einheiten: einheiten / termine, wochen } : null;
 }
 
 meldungManuellDialog = function (id, wochenKey) {
@@ -40,6 +55,7 @@ meldungManuellDialog = function (id, wochenKey) {
   const { week } = isoWeek(fromDk(wochenKey));
   const satz = satzFuer(id, wochenKey);
   const vorher = letzterSatz(id, dk(new Date(fromDk(wochenKey).getTime() - 864e5)));
+  const q = teamQuote(id, wochenKey);
   simpleDialog(
     `${entschaerfeText(m.name)} · KW ${week}`,
     "Wochenmeldung von Hand",
@@ -57,7 +73,12 @@ meldungManuellDialog = function (id, wochenKey) {
      <div class="h4">Zahlen der Woche</div>
      <div class="grp mmgitter">${MANUELL_FELDER.map(([k, l]) =>
        fld("mm_" + k, l, alt[k] ?? "", "text", 'inputmode="decimal"'),
-     ).join("")}</div>`,
+     ).join("")}</div>
+     <p class="hinweis" id="mmQuote">${
+       q
+         ? `Erwartung aus ${q.wochen} ${q.wochen === 1 ? "Meldung" : "Meldungen"}: ${eur(q.umsatz)} € netto und ${dec(q.einheiten, 2)} Einheiten je Kundentermin – mal den Kundenterminen der Folgewoche.`
+         : "Sobald es frühere Meldungen gibt, rechnet die App erwarteten Umsatz und Einheiten selbst aus."
+     }</p>`,
     () => {
       const w = {};
       MANUELL_FELDER.forEach(([k]) => {
@@ -77,23 +98,57 @@ meldungManuellDialog = function (id, wochenKey) {
     },
     "Woche speichern",
   );
+  /* Erwartung automatisch aus der Quote, solange nicht selbst überschrieben */
+  const nT = document.getElementById("mm_nTermine"),
+    eU = document.getElementById("mm_erwUmsatz"),
+    eE = document.getElementById("mm_erwEinheiten");
+  if (q && nT && eU && eE) {
+    [eU, eE].forEach((f) => f.addEventListener("input", () => (f.dataset.selbst = "1")));
+    const rechnen = () => {
+      const t = num(nT.value);
+      if (!eU.dataset.selbst) eU.value = t ? String(Math.round(t * q.umsatz)) : "";
+      if (!eE.dataset.selbst) eE.value = t ? String(Math.round(t * q.einheiten * 10) / 10).replace(".", ",") : "";
+    };
+    nT.addEventListener("input", rechnen);
+    if (!alt.erwUmsatz && !alt.erwEinheiten) rechnen();
+  }
 };
 
-/* In der Teamliste den Satz der Woche mit anzeigen */
-const renderTeamManuellOhneSatz = renderTeamManuell;
+/* Teamliste: Name und Satz oben, Knöpfe immer an derselben Stelle darunter */
 renderTeamManuell = function () {
-  renderTeamManuellOhneSatz();
-  const box = document.getElementById("tmManuell");
-  if (!box) return;
+  const seite = document.getElementById("page-team");
+  if (!seite || !istTeamleiter()) return;
+  teamLeisteEinbauen();
+  let box = document.getElementById("tmManuell");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "tmManuell";
+    box.className = "asec";
+    seite.appendChild(box);
+  }
+  const liste = teamManuell();
   const woche = dk(tmMontag || monday);
-  box.querySelectorAll(".rszeile").forEach((z) => {
-    const b = z.querySelector("[data-mmel]");
-    const small = z.querySelector("small");
-    if (!b || !small || small.dataset.satz) return;
-    const hat = (teamMeldungen()[b.dataset.mmel] || {})[woche];
-    small.dataset.satz = "1";
-    small.textContent += ` · ${satzFuer(b.dataset.mmel, woche)} %${hat ? "" : " (vorgeschlagen)"}`;
-  });
+  const { week } = isoWeek(fromDk(woche));
+  box.innerHTML = `<h3>Dein Team</h3>
+    ${
+      liste.length
+        ? `<div class="tmliste">${liste
+            .map((m) => {
+              const hat = (teamMeldungen()[m.id] || {})[woche];
+              return `<div class="tmkarte">
+          <div class="tmkopf"><b>${entschaerfeText(m.name)}</b>
+            <small>${satzFuer(m.id, woche)} % · ${hat ? `Meldung KW ${week} eingetragen` : `Meldung KW ${week} fehlt`}</small></div>
+          <div class="tmknoepfe">
+            <button class="mini${hat ? "" : " primaer"}" data-mmel="${m.id}">${hat ? "Meldung ändern" : "Meldung eintragen"}</button>
+            <button class="mini" data-mbear="${m.id}">Bearbeiten</button></div></div>`;
+            })
+            .join("")}</div>`
+        : `<p class="hinweis">Noch niemand eingetragen. Über „Teammitglied hinzufügen“ legst du jemanden an.</p>`
+    }`;
+  box
+    .querySelectorAll("[data-mmel]")
+    .forEach((b) => (b.onclick = () => meldungManuellDialog(b.dataset.mmel, woche)));
+  box.querySelectorAll("[data-mbear]").forEach((b) => (b.onclick = () => manuellDialog(b.dataset.mbear)));
 };
 
 /* Teamprovision je Mitglied und Satz – Wochen mit anderem Satz stehen getrennt */
