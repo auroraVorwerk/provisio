@@ -48,12 +48,15 @@ const mailMerken = (dk, m) => {
 };
 const mailGemerkt = (dk) => store.get("bw-mail-" + dk) || "";
 
+/* Autofill: nur die DK-Nummer gilt als Benutzername (autocomplete="username") */
 const feld = (id, l, v = "", extra = "") =>
-  `<div class="field"><label for="${id}">${l}</label><input id="${id}" value="${v}" autocomplete="off" spellcheck="false" ${extra}></div>`;
+  `<div class="field"><label for="${id}">${l}</label><input id="${id}" value="${v}"${
+    /autocomplete=/.test(extra) ? "" : ' autocomplete="off"'
+  } spellcheck="false" ${extra}></div>`;
 const EYE_AN = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.6"/></svg>`;
 const EYE_AUS = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2 12s3.6-6 10-6c2.1 0 3.9.6 5.4 1.5M22 12s-3.6 6-10 6c-2.1 0-3.9-.6-5.4-1.5"/><line x1="4" y1="20" x2="20" y2="4"/></svg>`;
-const pwFeld = (id, l) => `<div class="field pw"><label for="${id}">${l}</label>
-  <input id="${id}" type="password" autocomplete="new-password" placeholder="••••••••">
+const pwFeld = (id, l, ac = "new-password") => `<div class="field pw"><label for="${id}">${l}</label>
+  <input id="${id}" type="password" autocomplete="${ac}" placeholder="••••••••">
   <button type="button" class="eye" data-eye="${id}" aria-label="Passwort anzeigen">${EYE_AN}</button></div>`;
 const wert = (id) => {
   const e = document.getElementById(id);
@@ -95,8 +98,8 @@ function renderLogin() {
     h =
       kopf +
       `<h2>Anmelden</h2><p class="lgsub">DK-Nummer und Passwort entsperren deine verschlüsselten Daten.</p>
-      ${feld("lgDk", "DK-Nummer", lg.dk || "", 'placeholder="DK00000000"')}
-      ${pwFeld("lgPw", "Passwort")}
+      ${feld("lgDk", "DK-Nummer", lg.dk || "", 'placeholder="DK00000000" autocomplete="username" autocapitalize="characters" name="username"')}
+      ${pwFeld("lgPw", "Passwort", "current-password")}
       ${fehler}
       <button class="btn primary" id="lgGo"${laden}>${lgBusy ? "einen Moment …" : "Anmelden"}</button>
       <button class="linkbtn" data-go="forgot">Passwort vergessen?</button>
@@ -106,8 +109,8 @@ function renderLogin() {
     h =
       kopf +
       `<h2>Neu registrieren</h2><p class="lgsub">Deine Daten und ein selbst gewähltes Passwort.</p>
-      ${feld("lgDk", "DK-Nummer", lg.dk || "", 'placeholder="DK00000000"')}
-      <div class="row2">${feld("lgVor", "Vorname", lg.vor || "")}${feld("lgNach", "Nachname", lg.nach || "")}</div>
+      <div class="row2">${feld("lgVor", "Vorname", lg.vor || "", 'autocomplete="given-name"')}${feld("lgNach", "Nachname", lg.nach || "", 'autocomplete="family-name"')}</div>
+      ${feld("lgDk", "DK-Nummer", lg.dk || "", 'placeholder="DK00000000" autocomplete="username" autocapitalize="characters" name="username"')}
       ${pwFeld("lgPw", "Passwort")}
       <p class="lghint" style="margin:-6px 0 10px">${PW_REGEL_TEXT}</p>
       ${pwFeld("lgPw2", "Passwort wiederholen")}
@@ -119,7 +122,7 @@ function renderLogin() {
     h =
       kopf +
       `<h2>Passwort vergessen</h2><p class="lgsub">Mit deinem Wiederherstellungs-Code setzt du ein neues Passwort. Deine Daten bleiben erhalten.</p>
-      ${feld("lgDk", "DK-Nummer", lg.dk || "", 'placeholder="DK00000000"')}
+      ${feld("lgDk", "DK-Nummer", lg.dk || "", 'placeholder="DK00000000" autocomplete="username" autocapitalize="characters" name="username"')}
       ${feld("lgCode", "Wiederherstellungs-Code", lg.code || "", 'placeholder="XXXX-XXXX-XXXX-…" autocapitalize="characters" spellcheck="false"')}
       ${pwFeld("lgPw", "Neues Passwort")}
       <p class="lghint" style="margin:-6px 0 10px">${PW_REGEL_TEXT}</p>

@@ -132,7 +132,7 @@ function neuerCodeDialog() {
   simpleDialog(
     "Neuer Wiederherstellungs-Code",
     "Der bisherige Code gilt danach nicht mehr",
-    `<div class="grp">${fld("ncPw", "Dein Passwort", "", "password", 'autocomplete="current-password"')}</div>
+    `<div class="grp"><input type="text" name="username" autocomplete="username" value="${me.dk}" readonly tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">${fld("ncPw", "Dein Passwort", "", "password", 'autocomplete="current-password"')}</div>
      <p class="err" id="ncErr" hidden></p>`,
     async () => {
       const err = document.getElementById("ncErr");
