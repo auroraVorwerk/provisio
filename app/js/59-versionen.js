@@ -7,6 +7,19 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.2.2",
+    datum: "Oktober 2026",
+    kurz: "Demo zum Ausprobieren",
+    teile: [
+      [
+        "Neu",
+        [
+          "Demo: Mit ?demo hinter der Adresse startet Provisio ohne Anmeldung mit Beispieldaten – zum Testen auf anderen Geräten. Es wird nichts gespeichert, und deine echten Daten bleiben verschlüsselt und unberührt.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.2.1",
     datum: "Oktober 2026",
     kurz: "Menü ganz verschwommen, Statistik-PDF dunkel",
