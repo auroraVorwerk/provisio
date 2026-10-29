@@ -7,6 +7,15 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.1.2",
+    datum: "Oktober 2026",
+    kurz: "Anmeldung mit DK-Nummer im Schlüsselbund",
+    teile: [
+      ["Verbessert", ["Das iPhone speichert beim Passwort nur noch die DK-Nummer als Benutzernamen – nicht mehr den Nachnamen."]],
+      ["Entfernt", ["„Aus Chat einfügen“ im Planer."]],
+    ],
+  },
+  {
     v: "Beta 1.1",
     datum: "Oktober 2026",
     kurz: "Serientermine, Rückgängig, Verkäufe und Provision neu",
@@ -33,7 +42,6 @@ const VERSIONEN = [
           "Promotion: Ziel zählt Termine und Kontakte; rund 65 % der Kontakte fließen in die Prognose.",
           "Nicht angetroffen bleibt im Planer stehen. Terminierungen zeigen ihre echte Zeit.",
           "Abholtermin zählt Verkäufe nicht mehr doppelt.",
-          "Das iPhone speichert beim Passwort nur noch die DK-Nummer als Benutzernamen.",
           "Statistik-PDF hell mit farbigen Spaltenköpfen; Säulen flach.",
           "Klareres Glas in der Leiste, Fenster ohne Glas, größere Seitenränder.",
         ],

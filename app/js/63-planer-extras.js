@@ -6,8 +6,7 @@
  *     nächsten 52 Wochen; mit jeder neuen Woche wächst die Serie nach.
  *     Beim Löschen: nur diesen Termin oder diesen und alle zukünftigen.
  * 2 · Rückgängig: die letzten Änderungen im Kalender zurücknehmen.
- * 3 · Aus Chat einfügen: eine Zeile „PROVISIO-TERMIN | …“ legt einen Termin an.
- * 4 · Kleinigkeiten: keine X-Markierung mehr im Raster, Nichtkauf-Gründe umbenennen.
+ * 3 · Kleinigkeiten: keine X-Markierung mehr im Raster, Nichtkauf-Gründe umbenennen.
  */
 (function () {
   "use strict";
@@ -243,157 +242,7 @@
       return r;
     };
 
-  /* ---------- 3 · Aus Chat einfügen ---------- */
-  const ARTEN = {
-    kundentermin: "kunde",
-    kunde: "kunde",
-    "premium checkin": "premium",
-    premium: "premium",
-    meeting: "meeting",
-    teammeeting: "meeting",
-    training: "meeting",
-    schulung: "meeting",
-    event: "meeting",
-    privat: "privat",
-    terminieren: "terminieren",
-    festgebietsbegehung: "terminieren",
-    promotion: "terminieren",
-    büro: "buero",
-    buero: "buero",
-  };
-  const zeit = (t) => {
-    const m = /^(\d{1,2})(?::(\d{2}))?$/.exec(t.trim());
-    return m ? `${pad(+m[1])}:${m[2] || "00"}` : null;
-  };
-  function chatLesen(text) {
-    const zeile = (text || "")
-      .split(/\n/)
-      .map((z) => z.trim())
-      .find((z) => /^PROVISIO-TERMIN/i.test(z));
-    if (!zeile) throw new Error("Keine Zeile mit „PROVISIO-TERMIN“ gefunden.");
-    const teile = zeile.split("|").map((x) => x.trim()).slice(1);
-    const r = { felder: {} };
-    teile.forEach((t) => {
-      const kv = /^([^:]+):\s*(.*)$/.exec(t);
-      if (/^\d{4}-\d{2}-\d{2}$/.test(t)) r.tag = t;
-      else if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(t)) {
-        const [d, m, y] = t.split(".");
-        r.tag = `${y}-${pad(+m)}-${pad(+d)}`;
-      } else if (/^\d{1,2}(:\d{2})?\s*[-–]\s*\d{1,2}(:\d{2})?$/.test(t)) {
-        const [a, b] = t.split(/[-–]/);
-        r.von = zeit(a);
-        r.bis = zeit(b);
-      } else if (/^\d{1,2}:\d{2}$/.test(t)) r.von = zeit(t);
-      else if (kv && !/^\d/.test(t)) r.felder[kv[1].trim().toLowerCase()] = kv[2].trim();
-      else if (ARTEN[t.toLowerCase()]) {
-        r.art = ARTEN[t.toLowerCase()];
-        r.artText = t;
-      }
-    });
-    if (!r.tag) throw new Error("Das Datum fehlt.");
-    if (!r.von) throw new Error("Die Uhrzeit fehlt.");
-    if (!r.art) throw new Error("Die Terminart fehlt.");
-    const h = +r.von.slice(0, 2);
-    if (h < 7 || h > 22) throw new Error("Die Startzeit muss zwischen 7 und 22 Uhr liegen.");
-    r.h = h;
-    return r;
-  }
-  function eintragAus(r) {
-    const f = r.felder,
-      x = (s) => entschaerfeText(s || "");
-    const e = { kind: r.art };
-    const regulaerBis = `${pad(Math.min(24, r.h + 2))}:00`;
-    if (r.von !== `${pad(r.h)}:00`) e.start = r.von;
-    if (r.bis && r.bis !== regulaerBis) {
-      e.von = `${pad(r.h)}:00`;
-      e.bis = r.bis;
-    }
-    if (r.art === "kunde" || r.art === "premium") {
-      const name = (f.name || "").trim();
-      const an = /^(Familie|Frau|Herr)\s+/i.exec(name);
-      const rest = an ? name.slice(an[0].length) : name;
-      const woerter = rest.split(/\s+/).filter(Boolean);
-      if (an) e.anrede = x(an[1]);
-      e.nachname = x(woerter.pop() || "");
-      e.vorname = x(woerter.join(" "));
-      const adr = (f.adresse || "").split(",").map((s) => s.trim());
-      e.strasse = x(adr[0] || "");
-      const po = /^(\d{5})\s+(.*)$/.exec(adr[1] || "");
-      if (po) {
-        e.plz = po[1];
-        e.ort = x(po[2]);
-      } else if (adr[1]) e.ort = x(adr[1]);
-      if (f.telefon) e.telefon = x(f.telefon);
-      if (r.art === "kunde") e.quelle = x(f.quelle || "Festgebietsbegehung");
-      if (f.notiz) e.notiz = x(f.notiz);
-    } else if (r.art === "meeting") {
-      e.art = x(f.art || (/meeting|training|schulung|event/i.test(r.artText) && !/^meeting$/i.test(r.artText) ? r.artText : "Teammeeting"));
-      e.von = e.von || `${pad(r.h)}:00`;
-      e.bis = e.bis || regulaerBis;
-    } else if (r.art === "privat" || r.art === "buero") {
-      e.von = e.von || `${pad(r.h)}:00`;
-      e.bis = e.bis || regulaerBis;
-    } else if (r.art === "terminieren") {
-      e.quelle = /promotion/i.test(r.artText + " " + (f.art || "")) ? "Promotion" : "Festgebietsbegehung";
-      e.ziel = Math.max(1, Math.round(num(f.ziel || "4")));
-      if (f.ort) e.ort = x(f.ort);
-      e.gebiet = /wei/i.test(f.gebiet || "") ? "Weißgebiet" : "Festgebiet";
-    }
-    return e;
-  }
-  function chatDialog() {
-    simpleDialog(
-      "Aus Chat einfügen",
-      "Die Zeile mit PROVISIO-TERMIN hier einfügen",
-      `<div class="grp"><div class="field"><label for="chatText">Zeile aus dem Chat</label>
-         <textarea id="chatText" rows="4" placeholder="PROVISIO-TERMIN | 2026-11-03 | 10:00-12:00 | Kundentermin | Name: … "></textarea></div>
-         <div class="actions"><button type="button" class="btn" id="chatPaste">Aus Zwischenablage holen</button></div></div>
-       <div id="chatVorschau"></div>
-       <p class="err" id="chatErr" hidden></p>`,
-      () => {
-        const err = document.getElementById("chatErr");
-        try {
-          const r = chatLesen(document.getElementById("chatText").value);
-          if (entries[key(r.tag, r.h)]) throw new Error("Zu dieser Zeit steht schon ein Termin im Kalender.");
-          entries[key(r.tag, r.h)] = eintragAus(r);
-          saveData();
-          closeModal();
-          renderAll();
-          if (typeof gpGeheZu === "function") gpGeheZu(r.tag);
-        } catch (e) {
-          err.textContent = e.message;
-          err.hidden = false;
-        }
-      },
-      "Eintragen",
-    );
-    const feld = document.getElementById("chatText");
-    const vorschau = () => {
-      const box = document.getElementById("chatVorschau");
-      const err = document.getElementById("chatErr");
-      err.hidden = true;
-      try {
-        const r = chatLesen(feld.value);
-        const e = eintragAus(r);
-        const d = fromDk(r.tag);
-        box.innerHTML = `<div class="grp chatvor"><b>${DAYS_L[(d.getDay() + 6) % 7]}, ${fmt(d)} · ${r.von}${r.bis ? "–" + r.bis : ""} Uhr</b>
-          <span>${r.artText || r.art}${e.nachname ? " · " + [e.anrede, e.vorname, e.nachname].filter(Boolean).join(" ") : ""}${e.ort ? " · " + e.ort : ""}</span></div>`;
-      } catch (ex) {
-        box.innerHTML = "";
-      }
-    };
-    feld.addEventListener("input", vorschau);
-    document.getElementById("chatPaste").onclick = async () => {
-      try {
-        feld.value = await navigator.clipboard.readText();
-        vorschau();
-      } catch (e) {
-        feld.focus();
-      }
-    };
-  }
-
-  /* Leiste unten im Planer: Rückgängig und Aus Chat einfügen */
+  /* Leiste unten im Planer: Rückgängig */
   function leisteEinbauen() {
     const seite = document.getElementById("page-planer");
     if (!seite || seite.querySelector(".planaktionen")) return;
@@ -402,13 +251,10 @@
     d.innerHTML = `<button type="button" class="planakt" id="planUndo" disabled>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
         Rückgängig</button>
-      <button type="button" class="planakt" id="planChat">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
-        Aus Chat einfügen</button>`;
+`;
     const legende = seite.querySelector(".legend");
     (legende || seite.lastElementChild).after(d);
     d.querySelector("#planUndo").onclick = rueckgaengig;
-    d.querySelector("#planChat").onclick = chatDialog;
     knopfZeigen();
   }
   function knopfZeigen() {
@@ -419,7 +265,7 @@
     }
   }
 
-  /* ---------- 4 · Kleinigkeiten ---------- */
+  /* ---------- 3 · Kleinigkeiten ---------- */
   /* Keine X-Markierung mehr im Raster */
   if (typeof archivMark === "function") archivMark = () => "";
   /* Alte Daten an Beta 1.1 anpassen */
@@ -477,6 +323,5 @@
   const kopier = document.getElementById("kopierBtn");
   if (kopier) kopier.remove();
   setInterval(() => sicher(serienNachziehen), 6 * 36e5);
-  window.chatLesen = chatLesen;
   window.serienNachziehen = serienNachziehen;
 })();
