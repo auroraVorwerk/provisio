@@ -78,7 +78,10 @@ const plusTage = (dayKey, n) => {
   d.setDate(d.getDate() + n);
   return dk(d);
 };
-const kurzName = (e) => `${(e.vorname || "").trim().charAt(0).toUpperCase()}. ${e.nachname || ""}`;
+const kurzName = (e) => {
+  const v = (e.vorname || "").trim().charAt(0).toUpperCase();
+  return v ? `${v}. ${e.nachname || ""}` : e.nachname || "";
+};
 
 function label(e) {
   if (e.kind === "kunde") return { t1: kurzName(e), t2: "" };

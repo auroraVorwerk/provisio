@@ -7,6 +7,30 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.4",
+    datum: "Oktober 2026",
+    kurz: "Praxis-Einführung und ruhige Fenster",
+    teile: [
+      [
+        "Neu",
+        [
+          "Praxis-Einführung wie in einem Spiel: Jede Seite, jedes Fenster und jede Funktion probierst du einmal selbst aus – ein Lichtkreis zeigt, wohin du tippst, eine Karte erklärt kurz. 11 Kapitel, 91 Schritte.",
+          "Neue Zugänge starten automatisch mit der Einführung. Erst wenn sie geschafft ist und alle Beispiele wieder gelöscht sind, ist die App frei.",
+          "Die Einführung merkt sich den Stand – nach einem Neustart geht es am selben Schritt weiter.",
+          "Einstellungen → Info → Einführung starten: jederzeit wiederholen. Deine echten Daten werden vorher gesichert und am Ende exakt wiederhergestellt.",
+          "Zum Ausprobieren ohne Konto: ?demo=einfuehrung hinter der Adresse.",
+        ],
+      ],
+      [
+        "Verbessert",
+        [
+          "Fenster bauen sich nur beim ersten Öffnen mit Animation auf. Beim Antippen von Ja/Nein, Geräten oder Plus/Minus blinkt nichts mehr.",
+          "Verkäufe ohne Vornamen zeigen nur den Nachnamen statt „. Name“.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.3",
     datum: "Oktober 2026",
     kurz: "Für das iPhone Duo",

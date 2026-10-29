@@ -112,7 +112,9 @@
     };
     return { entries: e, settings: {} };
   }
-  loadData = async () => demoDaten();
+  /* ?demo=einfuehrung: leeres Konto, die Praxis-Einführung startet sofort */
+  const leer = /[?&]demo=einfuehrung/.test(location.search);
+  loadData = async () => (leer ? { entries: {}, settings: {} } : demoDaten());
 
   addEventListener(
     "load",
@@ -123,7 +125,7 @@
           dk: "DK00000000",
           vorname: "Demo",
           nachname: "Nutzerin",
-          rolle: "TL",
+          rolle: leer ? "KB" : "TL",
           thema: "Dunkel",
         });
         loginEl.hidden = true;
