@@ -2239,3 +2239,123 @@ html body #ziele .anmmini span[role=button]{cursor:pointer}
 html body #ziele .anmtitel h3{padding:0!important;margin:0!important}
 html body #ziele .anmtitel h3::before{display:none!important}
 html body #ziele .anmtitel{margin-bottom:6px}
+
+/* Beta 1.2.1 · Mehr-Menü deckt den ganzen Bildschirm ab – auch hinter der Leiste */
+html body .drawer.open {
+  top: 0 !important;
+  bottom: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+}
+html body .scrim.open {
+  position: fixed !important;
+  inset: 0 !important;
+  height: auto !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+/* Beta 1.2.1 · Statistik-PDF im dunklen Provisio-Design */
+@media print {
+  body.drucke-stat,
+  html:has(body.drucke-stat) {
+    --bg: #08121f;
+    --surface: #101c2b;
+    --surface-2: #17263a;
+    --surface-3: #1f3049;
+    --line: #22324a;
+    --line-soft: #1a2940;
+    --text: #f2f6fa;
+    --muted: #9aa9bb;
+    --faint: #7f8fa4;
+    --fill: #17263a;
+    --z0: #0d1928;
+    --z1: #111f31;
+    background: #08121f !important;
+    color: #f2f6fa !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.drucke-stat .druckstat,
+  body.drucke-stat .dsblatt,
+  body.drucke-stat .dsinner {
+    background: #08121f !important;
+    color: #f2f6fa !important;
+  }
+  body.drucke-stat .stat,
+  body.drucke-stat .stat td,
+  body.drucke-stat .stat th:not(.vh) {
+    background: #0d1928 !important;
+    color: #e6edf5 !important;
+    border-color: #1f2f45 !important;
+  }
+  body.drucke-stat .stat tr.z1 td:not(.tick):not(.cnt) {
+    background: #111f31 !important;
+  }
+  body.drucke-stat .stat thead tr.grp th,
+  body.drucke-stat .stat thead tr.grp th.empty {
+    background: #08121f !important;
+    color: #7f8fa4 !important;
+    border-bottom: 1px solid #2a3c55 !important;
+  }
+  body.drucke-stat .stat th.vh,
+  body.drucke-stat .stat th.vh:not([style]) {
+    background: #1f3049 !important;
+    color: #f2f6fa !important;
+  }
+  body.drucke-stat .stat th.vh[style] {
+    background: color-mix(in srgb, var(--vhc, #3b9bf0) 62%, #101c2b) !important;
+    color: #ffffff !important;
+  }
+  body.drucke-stat .stat th.col-num,
+  body.drucke-stat .stat th.col-alt,
+  body.drucke-stat .stat th.col-time,
+  body.drucke-stat .stat th.col-name {
+    background: #17325a !important;
+    color: #ffffff !important;
+  }
+  body.drucke-stat .stat tr.dayrow td {
+    background: #08121f !important;
+  }
+  body.drucke-stat .stat tr.dayrow span {
+    background: #3b9bf0 !important;
+    color: #ffffff !important;
+  }
+  body.drucke-stat .stat td.tick[style],
+  body.drucke-stat .stat td.cnt[style] {
+    background: color-mix(in srgb, var(--tc, #3b9bf0) 45%, #0d1928) !important;
+    color: #ffffff !important;
+  }
+  body.drucke-stat .stat td.tick.nein[style] {
+    background: #0d1928 !important;
+    color: #5d6c80 !important;
+  }
+  body.drucke-stat .stat td.vsep,
+  body.drucke-stat .stat th.vsep {
+    background: #08121f !important;
+    border-left: 2px solid #3b9bf0 !important;
+  }
+  body.drucke-stat .dskopf,
+  body.drucke-stat .dskopf b,
+  body.drucke-stat .dskopf h1,
+  body.drucke-stat .dskopf h2 {
+    color: #f2f6fa !important;
+  }
+  body.drucke-stat .dskopf small,
+  body.drucke-stat .stat td.name small {
+    color: #9aa9bb !important;
+  }
+}
+@media print {
+  /* Rand ums dunkle Blatt, die Tabelle skaliert auf die verbleibende Fläche */
+  body.drucke-stat .dsblatt {
+    box-sizing: border-box !important;
+    padding: 2.6vw 2.6vw 0 !important;
+  }
+  body.drucke-stat .dsinner {
+    --u: min(calc(94.8vw / var(--dw, 1470)), calc((100vh - 3.6vw) / var(--dh, 640))) !important;
+  }
+}

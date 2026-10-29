@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.2.1",
+    datum: "Oktober 2026",
+    kurz: "Menü ganz verschwommen, Statistik-PDF dunkel",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Das Mehr-Menü legt sich jetzt über den ganzen Bildschirm – auch hinter der Leiste ist alles verschwommen.",
+          "Statistik-PDF im dunklen Provisio-Design mit farbigen Spaltenköpfen und Rand.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.2",
     datum: "Oktober 2026",
     kurz: "Abholtermin, Einstunden-Termine, Provision und Glas",
