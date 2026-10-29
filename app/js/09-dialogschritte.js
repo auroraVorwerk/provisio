@@ -902,6 +902,13 @@ function paintRoh() {
          <div class="field"><label for="f_bis">Bis</label><input type="time" id="f_bis" value="${bis}" step="900"></div>
        </div>
        ${privat ? `${fld("prBisTag", "Bis einschließlich Tag (für Urlaub, sonst leer lassen)", draft.bisTag || "", "date")}` : ""}
+       ${
+         draft.kind === "meeting"
+           ? `<div class="field"><label for="f_mnotiz">Notiz</label><input id="f_mnotiz" maxlength="80" placeholder="z. B. Thema der Schulung" value="${entschaerfeText(
+               draft.notiz ?? (entries[key(draft.day, draft.hour)] || {}).notiz ?? "",
+             )}"></div>`
+           : ""
+       }
        ${error ? `<div class="err">${error}</div>` : ""}
        <div class="actions"><button class="btn" data-back="${privat ? "kind" : "art"}">Zurück</button><button class="btn primary" id="save">Speichern</button></div>
 `;
@@ -909,6 +916,8 @@ function paintRoh() {
     document.getElementById("save").onclick = () => {
       const b = document.getElementById("f_bis").value;
       draft.bis = b;
+      const mn = document.getElementById("f_mnotiz");
+      if (mn) draft.notiz = mn.value.trim();
       const st = document.getElementById("f_start").value || von;
       draft.start = st;
       const bDec = toDec(b) || 24;
@@ -937,6 +946,8 @@ function paintRoh() {
       else delete eintrag.start;
       if (draft.art) eintrag.art = draft.art;
       else delete eintrag.art;
+      if (draft.kind === "meeting" && draft.notiz) eintrag.notiz = draft.notiz;
+      else if (draft.kind === "meeting") delete eintrag.notiz;
       if (bisTag && bisTag > draft.day) eintrag.bisTag = bisTag;
       else delete eintrag.bisTag;
       entries[key(draft.day, draft.hour)] = eintrag;

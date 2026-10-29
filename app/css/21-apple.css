@@ -2378,3 +2378,120 @@ html body select#ptZeit {
   text-align-last: center;
   -moz-text-align-last: center;
 }
+
+/* Beta 1.5.3 · KW antippbar */
+html body .weekbar .weeklabel {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+html body .weekbar .weeklabel .kw::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 0 3px 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.55;
+}
+html body .weekbar .weeklabel:active {
+  opacity: 0.6;
+}
+
+/* KW-Übersicht wie im Apple-Kalender */
+.kwliste {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 6px;
+}
+.kwmonat h4 {
+  margin: 0 0 8px 4px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text);
+}
+.kwkopf,
+.kwzeile {
+  display: grid;
+  grid-template-columns: 34px repeat(7, 1fr);
+  align-items: center;
+}
+.kwkopf span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--faint);
+  text-align: center;
+  padding-bottom: 4px;
+}
+.kwkopf span:first-child {
+  color: var(--accent);
+  opacity: 0.8;
+}
+.kwzeile {
+  width: 100%;
+  min-height: 40px;
+  margin: 1px 0;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.kwzeile:active {
+  background: var(--fill);
+}
+.kwnr {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.kwtag {
+  position: relative;
+  font-size: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 40px;
+}
+.kwtag.belegt::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+.kwtag.heute {
+  color: #fff;
+  font-weight: 700;
+}
+.kwtag.heute::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border-radius: 50%;
+  background: #ff453a;
+  z-index: -1;
+}
+.kwtag.heute { z-index: 0; isolation: isolate; }
+.kwzeile.jetzt {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+.kwzeile.gezeigt {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.kwzeile.gezeigt .kwnr {
+  color: var(--text);
+}

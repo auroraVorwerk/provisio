@@ -95,7 +95,7 @@ function label(e) {
       t2: [e.start, n.umsatz ? eur(num(n.umsatz)) + " €" : ""].filter(Boolean).join(" · "),
     };
   }
-  if (e.kind === "meeting") return { t1: e.art, t2: `${e.start || e.von}–${e.bis}` };
+  if (e.kind === "meeting") return { t1: e.notiz ? `${e.art} · ${e.notiz}` : e.art, t2: `${e.start || e.von}–${e.bis}` };
   if (e.kind === "terminieren") {
     /* Vorne steht das Ziel, dahinter die Kurzform der Art */
     const kurz =

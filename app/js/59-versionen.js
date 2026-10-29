@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.5.3",
+    datum: "Oktober 2026",
+    kurz: "KW-Übersicht und Notiz für Meetings",
+    teile: [
+      [
+        "Neu",
+        [
+          "Tipp im Planer oder in der Statistik auf „KW …“: Monatskalender mit Kalenderwochen wie bei Apple. Die aktuelle Woche ist umrandet, die angezeigte gefüllt, heute rot. Ein Tipp auf eine Woche springt hin – „Diese Woche“ bringt dich zurück.",
+          "Meetings haben eine Notiz, z. B. das Thema der Schulung. Sie steht im Planer direkt hinter der Art.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.5.2",
     datum: "Oktober 2026",
     kurz: "Ohne Erklärtexte, Uhrzeiten mittig",
