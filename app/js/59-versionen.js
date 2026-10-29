@@ -7,6 +7,22 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.3",
+    datum: "Oktober 2026",
+    kurz: "Für das iPhone Duo",
+    teile: [
+      [
+        "Neu",
+        [
+          "iPhone Duo zugeklappt: Die Leiste läuft senkrecht rechts unten bis etwa zur halben Höhe, das Plus im Planer sitzt darüber. Die rechte Spalte oben bleibt frei für Uhr und WLAN.",
+          "iPhone Duo aufgeklappt quer: Die App verschwimmt, Eingaben sind gesperrt und ein Hinweis bittet ums Hochformat.",
+          "iPhone Duo aufgeklappt hoch: Leiste wie gewohnt unten.",
+          "Einstellungen → Darstellung → iPhone Duo: Auto erkennt das Gerät am Bildschirmformat (1:√2), An und Aus legen es fest.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.2.2",
     datum: "Oktober 2026",
     kurz: "Demo zum Ausprobieren",

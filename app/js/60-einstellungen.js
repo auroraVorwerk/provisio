@@ -270,9 +270,20 @@ renderProfil = async function () {
         )}</div>
         ${esSchalter("esGlas", "Glas-Effekt", glasAn())}
         ${esSchalter("esRuhe", "Bewegung reduzieren", ruhe)}
+        <div class="esz"><span class="eszt">iPhone Duo</span>${iosSeg(
+          "duo",
+          [
+            ["auto", "Auto"],
+            ["an", "An"],
+            ["aus", "Aus"],
+          ],
+          typeof duoModus === "function" ? duoModus() : "auto",
+          true,
+        )}</div>
       </div>
       <p class="esfuss">Der Glas-Effekt macht Leisten und Fenster durchscheinend. Auf älteren Geräten
-        ausschalten, falls die App ruckelt.</p>
+        ausschalten, falls die App ruckelt. iPhone Duo: zugeklappt läuft die Leiste rechts an der Seite,
+        aufgeklappt unten; quer wird um Hochformat gebeten. „Auto“ erkennt das Gerät am Bildschirmformat.</p>
 
       <p class="esgh">Nachbereitung</p>
       <div class="esgrp">${esSchalter("esSchritte", "Schritt für Schritt", settings.nbSchritte !== false)}</div>
