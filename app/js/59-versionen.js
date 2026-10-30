@@ -7,6 +7,27 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.6",
+    datum: "Oktober 2026",
+    kurz: "Wie voll ist der Tag – und tägliche Sicherung",
+    teile: [
+      [
+        "Neu",
+        [
+          "Tage färben sich grün, je voller sie mit Arbeit sind (Arbeitstag 8–22 Uhr = 100 %; Stufen ab 30, 60 und 85 %) – im Planer und in der KW-Übersicht.",
+          "Private Zeit zeigen orange Punkte (bis zu drei). Urlaub, Krank, Schulung, Frei und private Mehrtagestermine färben den ganzen Tag orange.",
+          "Tageskopie: Einmal am Tag – beim ersten Öffnen und um 23:59, wenn die App offen ist – sichert Provisio still eine verschlüsselte Kopie. Sieben Plätze, die sich wöchentlich ersetzen. Zurückholen unter Einstellungen → Daten → Tageskopien.",
+          "Täglicher Hinweis auf „Heute“: ein Tipp speichert „Provisio-Sicherung.json“ in „Dateien“ – immer derselbe Name, die neue ersetzt die alte.",
+        ],
+      ],
+      [
+        "Sicherheit",
+        ["Sicherungsdateien sind jetzt verschlüsselt (AES-256). Beim Einspielen öffnet sie dein Passwort oder dein Wiederherstellungs-Code. Ältere Dateien lassen sich weiterhin einspielen."],
+      ],
+      ["Verbessert", ["Die blaue Markierung des gewählten Tags sitzt wieder mittig.", "Punkte im Planer nur noch, wo es wirklich etwas zu zeigen gibt."]],
+    ],
+  },
+  {
     v: "Beta 1.5.3",
     datum: "Oktober 2026",
     kurz: "KW-Übersicht und Notiz für Meetings",

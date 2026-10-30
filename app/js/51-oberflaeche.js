@@ -91,11 +91,10 @@
       l.style.opacity = 0;
       return;
     }
-    const br = bar.getBoundingClientRect(),
-      ar = akt.getBoundingClientRect();
+    /* Layout-Maße statt Bildschirm-Maße: laufende Wisch-Animationen verschieben sonst die Markierung */
     l.style.opacity = 1;
-    l.style.width = ar.width + "px";
-    l.style.transform = `translateX(${ar.left - br.left - 4}px)`;
+    l.style.width = akt.offsetWidth + "px";
+    l.style.transform = `translateX(${akt.offsetLeft - 4}px)`;
   }
 
   /* ---------- Überschrift wandert in die Kopfzeile ---------- */

@@ -2495,3 +2495,107 @@ html body .weekbar .weeklabel:active {
 .kwzeile.gezeigt .kwnr {
   color: var(--text);
 }
+
+/* Beta 1.6 · Auslastung: Tage grün eingefärbt statt Punkte */
+html body #tagbar .tpunkt { display: none !important; }
+html body #tagbar [data-tag] {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px !important;
+  transition: background-color 0.3s ease;
+}
+html body #tagbar [data-tag][data-fuell="1"]:not([aria-pressed="true"]) { background: rgba(48, 209, 88, 0.16) !important; }
+html body #tagbar [data-tag][data-fuell="2"]:not([aria-pressed="true"]) { background: rgba(48, 209, 88, 0.34) !important; }
+html body #tagbar [data-tag][data-fuell="3"]:not([aria-pressed="true"]) { background: rgba(48, 209, 88, 0.56) !important; }
+html body #tagbar [data-tag][data-fuell="4"]:not([aria-pressed="true"]) { background: rgba(48, 209, 88, 0.85) !important; color: #04210d !important; }
+html body #tagbar [data-tag][data-fuell="4"]:not([aria-pressed="true"]) small { color: #04210d !important; opacity: 0.8; }
+/* gewählter Tag: kleiner grüner Balken zeigt die Auslastung trotzdem */
+html body #tagbar [data-tag][aria-pressed="true"]:not([data-fuell="0"])::after {
+  content: "";
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  bottom: 6px;
+  height: 3px;
+  border-radius: 2px;
+  background: #30d158;
+}
+html body #tagbar [data-tag][aria-pressed="true"][data-fuell="1"]::after { right: 58%; }
+html body #tagbar [data-tag][aria-pressed="true"][data-fuell="2"]::after { right: 48%; }
+html body #tagbar [data-tag][aria-pressed="true"][data-fuell="3"]::after { right: 38%; }
+
+/* KW-Übersicht: Tag als grüne Kachel je nach Auslastung */
+.kwtag.f1, .kwtag.f2, .kwtag.f3, .kwtag.f4 { z-index: 0; isolation: isolate; }
+.kwtag.f1::after, .kwtag.f2::after, .kwtag.f3::after, .kwtag.f4::after {
+  content: "";
+  position: absolute;
+  inset: 4px 3px;
+  border-radius: 10px;
+  z-index: -2;
+}
+.kwtag.f1::after { background: rgba(48, 209, 88, 0.2); }
+.kwtag.f2::after { background: rgba(48, 209, 88, 0.4); }
+.kwtag.f3::after { background: rgba(48, 209, 88, 0.62); }
+.kwtag.f4::after { background: #30d158; }
+.kwtag.f4 { color: #04210d; font-weight: 600; }
+.kwtag.heute.f4 { color: #fff; }
+.kwtag.belegt::after { display: none; }
+
+/* Beta 1.6 · Abwesend (Urlaub & Co.) orange, private Zeit als orange Punkte */
+html body #tagbar [data-tag].abwesend:not([aria-pressed="true"]) { background: rgba(255, 159, 10, 0.42) !important; }
+html body #tagbar [data-tag].abwesend[aria-pressed="true"]::after {
+  content: ""; position: absolute; left: 30%; right: 30%; bottom: 6px; height: 3px; border-radius: 2px; background: #ff9f0a;
+}
+.ppunkte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  pointer-events: none;
+}
+.ppunkte .pp {
+  display: block !important;
+  flex: none !important;
+  width: 5px !important;
+  height: 5px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 50%;
+  background: #ff9f0a !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+html body #tagbar [data-tag] .ppunkte { bottom: 3px; }
+html body #tagbar [data-tag][aria-pressed="true"] .ppunkte { bottom: 10px; }
+.kwtag .ppunkte { bottom: 1px; }
+.kwtag.abw { z-index: 0; isolation: isolate; }
+.kwtag.abw::after {
+  content: "";
+  position: absolute;
+  inset: 4px 3px;
+  border-radius: 10px;
+  z-index: -2;
+  background: rgba(255, 159, 10, 0.55);
+}
+
+/* Beta 1.6 · täglicher Sicherungshinweis auf „Heute“ */
+.sghinweis {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px 12px 12px 16px;
+  border-radius: 18px;
+  background: var(--gruppe);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+.sghinweis .sgtext { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sghinweis .sgtext b { font-size: 15px; }
+.sghinweis .sgtext span { font-size: 12.5px; color: var(--muted); }
+.sghinweis .sgjetzt {
+  border: 0; border-radius: 12px; padding: 9px 14px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer;
+}
+.sghinweis .sgspaeter {
+  width: 30px; height: 30px; border: 0; border-radius: 50%; background: var(--fill); color: var(--muted); font: inherit; cursor: pointer;
+}

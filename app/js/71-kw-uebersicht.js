@@ -30,7 +30,10 @@
         const d = new Date(mo.getFullYear(), mo.getMonth(), mo.getDate() + i);
         const key = dk(d);
         const fremd = d.getMonth() !== m;
-        tage += `<span class="kwtag${fremd ? " fremd" : ""}${key === heute && !fremd ? " heute" : ""}${belegt.has(key) && !fremd ? " belegt" : ""}">${fremd ? "" : d.getDate()}</span>`;
+        const weg = !fremd && typeof tagAbwesend === "function" ? tagAbwesend(key) : null;
+        const st = !fremd && !weg && typeof fuellStufe === "function" ? fuellStufe(key) : 0;
+        const pp = !fremd && !weg && typeof privatStufe === "function" ? privatStufe(key) : 0;
+        tage += `<span class="kwtag${fremd ? " fremd" : ""}${key === heute && !fremd ? " heute" : ""}${weg ? " abw" : st ? " f" + st : ""}">${fremd ? "" : d.getDate()}${pp ? punkteHTML(pp) : ""}</span>`;
       }
       const klasse = (+mo === +zeigMo ? " gezeigt" : "") + (+mo === +jetztMo ? " jetzt" : "");
       zeilen += `<button type="button" class="kwzeile${klasse}" data-kwmo="${dk(mo)}" aria-label="KW ${week}">
