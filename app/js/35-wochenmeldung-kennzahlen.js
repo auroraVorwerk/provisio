@@ -52,6 +52,12 @@ function meldungDaten(start) {
     jobtickets: 0,
     nTermine: 0,
     nPromos: 0,
+    nPromosFG: 0,
+    nPromosWG: 0,
+    promoEinheitenFG: 0,
+    promoEinheitenWG: 0,
+    promoUmsatzFG: 0,
+    promoUmsatzWG: 0,
     nTerminieren: 0,
     nMessen: 0,
   };
@@ -65,7 +71,10 @@ function meldungDaten(start) {
     if (tag >= nVon && tag <= nBis) {
       if (e.kind === "kunde") m.nTermine++;
       if (e.kind === "terminieren") {
-        if (e.quelle === "Promotion") m.nPromos++;
+        if (e.quelle === "Promotion") {
+          m.nPromos++;
+          e.gebiet === "Weißgebiet" ? m.nPromosWG++ : m.nPromosFG++;
+        }
         else if (e.quelle === "Messe") m.nMessen++;
         else m.nTerminieren++;
       }
@@ -107,6 +116,13 @@ function meldungDaten(start) {
           m.einheitenFG += eh; // Promotionverkauf liegt im Gebiet
           m.einheitenPromo += eh;
           m.umsatzPromo += num(n.umsatzFG) + num(n.umsatzWG);
+          if (e.gebiet === "Weißgebiet") {
+            m.promoEinheitenWG += eh;
+            m.promoUmsatzWG += num(n.umsatzFG) + num(n.umsatzWG);
+          } else {
+            m.promoEinheitenFG += eh;
+            m.promoUmsatzFG += num(n.umsatzFG) + num(n.umsatzWG);
+          }
           m.umsatzFG += num(n.umsatzFG);
           m.umsatzWG += num(n.umsatzWG);
         }
@@ -143,6 +159,24 @@ function meldungDaten(start) {
   return m;
 }
 
+/*
+ * Promotion getrennt nach Gebiet – es erscheint nur, was stattgefunden hat:
+ * keine Promotion → „Promotion 0“, sonst je Gebiet eine eigene Zeile mit Ergebnissen.
+ */
+function promoZeilen(m) {
+  const n = (v) => eur(netto(v)) + " €";
+  if (!m.promoFG && !m.promoWG) return [["Promotion", 0, ""]];
+  const z = [];
+  [
+    ["FG", m.promoFG, m.kontakteFG, m.promoTermineFG, m.promoEinheitenFG, m.promoUmsatzFG],
+    ["WG", m.promoWG, m.kontakteWG, m.promoTermineWG, m.promoEinheitenWG, m.promoUmsatzWG],
+  ].forEach(([g, anzahl, kon, ter, eh, um]) => {
+    if (!anzahl) return;
+    z.push([`Promotion ${g}`, anzahl, `Kontakte ${kon} · Termine ${ter}${eh ? ` · Einheiten ${eh}` : ""}${um ? ` · Umsatz ${n(um)}` : ""}`]);
+  });
+  return z;
+}
+
 function meldungHTML(start, name) {
   const m = meldungDaten(start);
   const n = (v) => eur(netto(v));
@@ -165,17 +199,9 @@ function meldungHTML(start, name) {
       )}
       ${zeile("K70 Einkauf", n(m.k70ein) + " €")}
       ${zeile("Anzahl Premium CheckIn", m.pci)}
-      ${zeile(
-        "Anzahl Promotions",
-        m.promoFG + m.promoWG,
-        m.promoFG + m.promoWG ? `Festgebiet ${m.promoFG} · Weißgebiet ${m.promoWG}` : "",
-      )}
-      ${zeile(
-        "davon Kontakte / Termine",
-        `${m.kontakte} / ${m.promoTermine}`,
-        m.kontakte + m.promoTermine ? `zusammen ${m.kontakte + m.promoTermine}` : "",
-      )}
-      ${zeile("Anzahl Empfehlungen", m.empfehlungen)}
+      ${promoZeilen(m)
+        .map(([l, w, x]) => zeile(l, w, x))
+        .join("")}
       ${zeile("Anzahl Jobtickets", m.jobtickets)}
     </tbody></table></div>
     <div class="ah4">Prognose für die Folgewoche</div>
@@ -187,7 +213,12 @@ function meldungHTML(start, name) {
         `${m.nTermine} Termine × ${Math.round(m.quote * 100)} % Abschlussquote`,
       )}
       ${zeile("Erwartete Einheiten", dec(m.erwarteteEinheiten, 1))}
-      ${zeile("Promotions in der Folgewoche", m.nPromos)}
+      ${
+        m.nPromosFG || m.nPromosWG
+          ? (m.nPromosFG ? zeile("Promotions FG in der Folgewoche", m.nPromosFG) : "") +
+            (m.nPromosWG ? zeile("Promotions WG in der Folgewoche", m.nPromosWG) : "")
+          : zeile("Promotions in der Folgewoche", 0)
+      }
       ${zeile("Festgebietsbegehungsblöcke", m.nTerminieren)}
       ${m.nMessen ? zeile("Messen in der Folgewoche", m.nMessen) : ""}
     </tbody></table></div>
@@ -209,13 +240,15 @@ function meldungText(start, name) {
     `Umsatz netto: ${n(m.umsatzGesamt)}`,
     `K70 Einkauf: ${n(m.k70ein)}`,
     `Anzahl Premium CheckIn: ${m.pci}`,
-    `Anzahl Promotions: ${m.promoFG + m.promoWG} (FG ${m.promoFG}, WG ${m.promoWG})`,
-    `davon Kontakte / Termine: ${m.kontakte} / ${m.promoTermine}`,
-    `Anzahl Empfehlungen: ${m.empfehlungen}`,
+    ...promoZeilen(m).map(([l, w, x]) => `${l}: ${w}${x ? ` (${x})` : ""}`),
     `Anzahl Jobtickets: ${m.jobtickets}`,
     ``,
     `Prognose Folgewoche:`,
     `Kundentermine: ${m.nTermine} · erwarteter Umsatz netto: ${n(m.erwarteterUmsatz)} · erwartete Einheiten: ${dec(m.erwarteteEinheiten, 1)}`,
-    `Promotions: ${m.nPromos} · Festgebietsbegehungsblöcke: ${m.nTerminieren}`,
+    `${
+      m.nPromosFG || m.nPromosWG
+        ? [m.nPromosFG ? `Promotions FG: ${m.nPromosFG}` : "", m.nPromosWG ? `Promotions WG: ${m.nPromosWG}` : ""].filter(Boolean).join(" · ")
+        : "Promotions: 0"
+    } · Festgebietsbegehungsblöcke: ${m.nTerminieren}`,
   ].join("\n");
 }

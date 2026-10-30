@@ -7,6 +7,38 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.7",
+    datum: "Oktober 2026",
+    kurz: "Wochenmeldung: Promotion nach Gebiet",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Wochenmeldung: Promotion getrennt nach Fest- und Weißgebiet – mit Kontakten, Terminen, Einheiten und Umsatz je Gebiet. Es steht nur da, was stattgefunden hat; ohne Promotion steht „Promotion 0“.",
+          "Auch die Prognose zeigt geplante Promotions getrennt nach FG und WG.",
+          "Team-Wochenmeldung und Excel-Export mit eigenen Spalten für FG und WG; von Hand eingetragene Meldungen fragen beides getrennt ab.",
+        ],
+      ],
+      ["Entfernt", ["Empfehlungen aus der Wochenmeldung."]],
+    ],
+  },
+  {
+    v: "Security 1.1",
+    datum: "Oktober 2026",
+    kurz: "Verschlüsselte Sicherungsdateien · mit Beta 1.6",
+    teile: [
+      [
+        "Sicherheit",
+        [
+          "Sicherungsdateien („Provisio-Sicherung.json“) sind jetzt mit AES-256 verschlüsselt – mit demselben Schlüssel wie deine Daten in der App. Wer die Datei findet, kann keine Kunden, Termine oder Zahlen lesen.",
+          "Beim Einspielen öffnet dein Passwort oder dein Wiederherstellungs-Code die Datei. Ein falsches Passwort wird abgelehnt.",
+          "Die Tageskopien in der App sind ebenfalls verschlüsselt.",
+          "Ältere, unverschlüsselte Sicherungen lassen sich weiterhin einspielen. Am besten danach einmal neu sichern, damit nur noch die verschlüsselte Datei existiert.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.6",
     datum: "Oktober 2026",
     kurz: "Wie voll ist der Tag – und tägliche Sicherung",
@@ -20,10 +52,7 @@ const VERSIONEN = [
           "Täglicher Hinweis auf „Heute“: ein Tipp speichert „Provisio-Sicherung.json“ in „Dateien“ – immer derselbe Name, die neue ersetzt die alte.",
         ],
       ],
-      [
-        "Sicherheit",
-        ["Sicherungsdateien sind jetzt verschlüsselt (AES-256). Beim Einspielen öffnet sie dein Passwort oder dein Wiederherstellungs-Code. Ältere Dateien lassen sich weiterhin einspielen."],
-      ],
+      ["Sicherheit", ["Verschlüsselte Sicherungsdateien – siehe Security 1.1."]],
       ["Verbessert", ["Die blaue Markierung des gewählten Tags sitzt wieder mittig.", "Punkte im Planer nur noch, wo es wirklich etwas zu zeigen gibt."]],
     ],
   },

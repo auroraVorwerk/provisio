@@ -19,13 +19,10 @@ TMSP.splice(
   ["Umsatz netto", (m) => netto(m.umsatzFG + m.umsatzWG + (m.umsatzMesse || 0)), "eur"],
   ["K70 Einkauf", (m) => netto(m.k70ein), "eur"],
   ["Premium CheckIn", (m) => m.pci],
-  ["Promotions", (m) => m.promoFG + m.promoWG],
-  [
-    "Kontakte / Termine",
-    (m) => `${m.kontakteFG + m.kontakteWG} / ${m.promoTermineFG + m.promoTermineWG}`,
-    "text",
-  ],
-  ["Empfehlungen", (m) => m.empfehlungen],
+  ["Promotion FG", (m) => m.promoFG || 0],
+  ["Kontakte / Termine FG", (m) => `${m.kontakteFG || 0} / ${m.promoTermineFG || 0}`, "text"],
+  ["Promotion WG", (m) => m.promoWG || 0],
+  ["Kontakte / Termine WG", (m) => `${m.kontakteWG || 0} / ${m.promoTermineWG || 0}`, "text"],
   ["Jobtickets", (m) => m.jobtickets],
 );
 TMSP_N.splice(
@@ -34,7 +31,8 @@ TMSP_N.splice(
   ["Kundentermine", (m) => m.nTermine],
   ["Erw. Umsatz netto", (m) => netto(m.erwarteterUmsatz), "eur"],
   ["Erw. Einheiten", (m) => m.erwarteteEinheiten, "dez"],
-  ["Promotions", (m) => m.nPromos],
+  ["Promotions FG", (m) => m.nPromosFG ?? m.nPromos ?? 0],
+  ["Promotions WG", (m) => m.nPromosWG || 0],
   ["FGB-Blöcke", (m) => m.nTerminieren],
 );
 
