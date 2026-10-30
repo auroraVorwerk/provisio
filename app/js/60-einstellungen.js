@@ -311,11 +311,11 @@ renderProfil = async function () {
 
       <p class="esgh">Info</p>
       <div class="esgrp">
-        ${esZeile("esVersionen", "Versionsverlauf", (neu ? '<i class="esneu" aria-label="Neu"></i>' : "") + VERSIONEN[0].v)}
+        ${esZeile("esVersionen", "Versionsverlauf", (neu ? '<i class="esneu" aria-label="Neu"></i>' : "") + aktuelleApp() + " · " + aktuelleSecurity().replace("Security", "Sec."))}
       </div>
       <div class="esgrp">${esZeile("esAbmelden", "Abmelden", "", "rot")}</div>
 
-      <div class="esmarke">${SCHWEBEBAHN}<b>Provisio</b><span>${VERSIONEN[0].v} · lokal · verschlüsselt · offline</span></div>
+      <div class="esmarke">${SCHWEBEBAHN}<b>Provisio</b><span>${aktuelleApp()} · ${aktuelleSecurity()} · lokal · verschlüsselt · offline</span></div>
     </div>`;
 
   const $ = (id) => box.querySelector("#" + id);

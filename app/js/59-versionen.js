@@ -7,6 +7,21 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.7.4",
+    datum: "Oktober 2026",
+    kurz: "Versionsverlauf getrennt nach App und Security",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Versionsverlauf in zwei Spalten: links die App-Versionen, rechts die Security-Versionen.",
+          "Security-Versionen sind als Sicherheitshinweis geschrieben – Geltungsbereich, Maßnahmen, technische Umsetzung und Hinweise – zum Nachlesen und Weitergeben, etwa an eine Rechtsabteilung.",
+          "Einstellungen zeigen beide aktuellen Stände.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.7.3",
     datum: "Oktober 2026",
     kurz: "Auslastung ruhiger: nur die Zahl färbt sich",
@@ -38,16 +53,46 @@ const VERSIONEN = [
   },
   {
     v: "Security 1.1",
-    datum: "Oktober 2026",
-    kurz: "Verschlüsselte Sicherungsdateien · mit Beta 1.6",
+    datum: "30. Oktober 2026",
+    ab: "Beta 1.6",
+    kurz: "Verschlüsselung von Sicherungsdateien und Tageskopien",
     teile: [
       [
-        "Sicherheit",
+        "Geltungsbereich",
         [
-          "Sicherungsdateien („Provisio-Sicherung.json“) sind jetzt mit AES-256 verschlüsselt – mit demselben Schlüssel wie deine Daten in der App. Wer die Datei findet, kann keine Kunden, Termine oder Zahlen lesen.",
-          "Beim Einspielen öffnet dein Passwort oder dein Wiederherstellungs-Code die Datei. Ein falsches Passwort wird abgelehnt.",
-          "Die Tageskopien in der App sind ebenfalls verschlüsselt.",
-          "Ältere, unverschlüsselte Sicherungen lassen sich weiterhin einspielen. Am besten danach einmal neu sichern, damit nur noch die verschlüsselte Datei existiert.",
+          "Gilt für alle Daten, die Provisio außerhalb des laufenden Arbeitsspeichers ablegt oder an das Betriebssystem übergibt: die Sicherungsdatei „Provisio-Sicherung.json“ (Export über „Daten sichern“ oder den täglichen Hinweis) und die automatischen Tageskopien.",
+        ],
+      ],
+      [
+        "Anlass",
+        [
+          "Bis einschließlich Beta 1.5.3 wurde die Sicherungsdatei unverschlüsselt erzeugt. Personenbezogene Daten von Kundinnen und Kunden (Namen, Adressen, Telefonnummern, Termine, Umsätze) waren darin im Klartext lesbar, sobald die Datei das Gerät verließ – etwa über iCloud Drive, E-Mail oder einen Messenger.",
+        ],
+      ],
+      [
+        "Maßnahmen",
+        [
+          "Die Sicherungsdatei wird vollständig verschlüsselt. Lesbar bleiben nur technische Kopfdaten: Formatkennung, DK-Nummer, Zeitpunkt und Anzahl der Termine.",
+          "Tageskopien werden ebenfalls verschlüsselt abgelegt (sieben Plätze, wöchentlich überschrieben, nur im Speicher der App).",
+          "Zum Einspielen ist das Passwort oder der Wiederherstellungs-Code erforderlich. Ohne eines von beiden lässt sich der Inhalt nicht wiederherstellen.",
+          "Unverschlüsselte Altdateien können weiterhin eingespielt werden, damit keine Daten verloren gehen. Neu erzeugt werden ausschließlich verschlüsselte Dateien.",
+        ],
+      ],
+      [
+        "Technische Umsetzung",
+        [
+          "Inhalt: AES-256-GCM mit dem Master Key des Kontos, je Sicherung ein neuer zufälliger 96-Bit-Initialisierungsvektor. GCM erkennt jede Veränderung der Datei.",
+          "Der Master Key liegt der Datei nur umschlossen bei: einmal mit dem Passwort, einmal mit dem Wiederherstellungs-Code (PBKDF2-SHA-256, 150.000 Iterationen, 128-Bit-Salt).",
+          "Verschlüsselung und Entschlüsselung laufen ausschließlich auf dem Gerät über die Web Crypto API. Es gibt keinen Server und keine Übertragung an Dritte.",
+          "Tageskopien liegen in der IndexedDB der App, getrennt je Konto.",
+        ],
+      ],
+      [
+        "Hinweise für Nutzerinnen und Nutzer",
+        [
+          "Alte, unverschlüsselte Sicherungsdateien (vor Beta 1.6 erstellt) sollten gelöscht werden – auch aus iCloud Drive, E-Mails und Chats.",
+          "Nach einer Passwortänderung öffnet sich eine ältere Sicherung weiterhin mit dem Passwort, das zum Zeitpunkt der Sicherung galt, oder mit dem Wiederherstellungs-Code.",
+          "Tageskopien ersetzen keine Sicherungsdatei: Wird die App vom Gerät gelöscht, sind sie ebenfalls gelöscht.",
         ],
       ],
     ],
@@ -305,36 +350,62 @@ const VERSIONEN = [
   {
     v: "Security 1.0",
     datum: "Oktober 2026",
-    kurz: "Lokal, offline und verschlüsselt",
+    ab: "Beta 1.0",
+    kurz: "Lokale, verschlüsselte Datenhaltung ohne Server",
     teile: [
       [
-        "Neu",
+        "Geltungsbereich",
         [
-          "Alle Daten liegen verschlüsselt (AES-256) in einer geschützten Datei auf dem Gerät.",
-          "Wiederherstellungs-Code, falls du dein Passwort vergisst.",
-          "Klare Passwortregeln: mindestens 8 Zeichen mit Groß- und Kleinbuchstabe, Zahl und Sonderzeichen.",
-          "Erinnerung an Datensicherungen.",
-          "Neuer Name Provisio mit Schwebebahn-Icon und blauem Farbthema.",
+          "Gilt für alle Daten, die in Provisio erfasst werden: Termine, Kundendaten, Listen, Zahlen, Einstellungen und Teamangaben.",
         ],
       ],
       [
-        "Verbessert",
+        "Maßnahmen",
         [
-          "Läuft komplett offline – ohne Datenbank, ohne Server, ohne Adresssuche.",
-          "Rolle Kundenberatung oder Teamleitung selbst wählbar, Team wird selbst eingetragen.",
+          "Provisio arbeitet vollständig lokal und offline. Es gibt keine Datenbank, keinen Server, keine Synchronisation und keine Adresssuche bei Drittanbietern. Cloud-Datenbank, Kalender-Synchronisation und Admin-Bereich wurden entfernt.",
+          "Alle Arbeitsdaten werden verschlüsselt auf dem Gerät gespeichert. Ohne Anmeldung sind sie nicht lesbar.",
+          "Anmeldung mit DK-Nummer und Passwort. Passwortregeln: mindestens 8 Zeichen, Groß- und Kleinbuchstabe, Zahl und Sonderzeichen.",
+          "Wiederherstellungs-Code für den Fall eines vergessenen Passworts; er kann jederzeit neu erzeugt werden, der alte verliert dann seine Gültigkeit.",
+          "Beim Abmelden wird der Schlüssel aus dem Arbeitsspeicher entfernt; die Daten sind danach wieder unlesbar.",
         ],
       ],
-      ["Entfernt", ["Cloud-Datenbank, Kalender-Synchronisation, Admin-Bereich und iPad-Ansicht."]],
+      [
+        "Technische Umsetzung",
+        [
+          "Daten: AES-256-GCM mit einem zufällig erzeugten Master Key je Konto.",
+          "Der Master Key wird nie im Klartext gespeichert, nur umschlossen mit Passwort und mit Wiederherstellungs-Code (PBKDF2-SHA-256, 150.000 Iterationen, 128-Bit-Salt).",
+          "Wiederherstellungs-Code: 24 Zeichen aus einem Zufallsgenerator für Kryptografie.",
+          "Ablage im privaten Dateisystem der App (Origin Private File System), ersatzweise im lokalen Speicher des Browsers; dauerhafte Speicherung wird beim System angefragt.",
+          "Content Security Policy: Skripte, Verbindungen und Formulare ausschließlich aus der App selbst („self“); keine Inhalte von fremden Servern.",
+        ],
+      ],
+      [
+        "Hinweise für Nutzerinnen und Nutzer",
+        [
+          "Passwort und Wiederherstellungs-Code getrennt und sicher aufbewahren. Gehen beide verloren, lassen sich die Daten nicht wiederherstellen – auch nicht durch die Entwicklerin.",
+          "Regelmäßig Sicherungen anlegen: Die Daten liegen nur auf diesem Gerät.",
+        ],
+      ],
     ],
   },
 ];
 
+const istSecurity = (v) => /^Security/.test(v.v);
+const aktuelleApp = () => (VERSIONEN.find((v) => !istSecurity(v)) || {}).v || "";
+const aktuelleSecurity = () => (VERSIONEN.find(istSecurity) || {}).v || "";
+
 function versionDetail(i) {
   const v = VERSIONEN[i];
+  const sec = istSecurity(v);
+  const aktuell = sec ? v.v === aktuelleSecurity() : v.v === aktuelleApp();
   unterseiteOeffnen(
     v.v,
     "Versionen",
-    `<p class="vsdatum">${v.datum}${i === 0 ? " · aktuell" : ""}</p>
+    `${
+      sec
+        ? `<div class="vssec"><b>Sicherheitshinweis</b><span>${v.v} · Stand ${v.datum}${v.ab ? ` · gilt ab ${v.ab}` : ""}${aktuell ? " · aktuell" : ""}</span></div>`
+        : `<p class="vsdatum">${v.datum}${aktuell ? " · aktuell" : ""}</p>`
+    }
      <p class="vskurz">${v.kurz}</p>
      ${v.teile
        .map(
@@ -349,15 +420,23 @@ function versionenUnterseite() {
   store.set("pv-version-gesehen", VERSIONEN[0].v);
   const punkt = document.querySelector("#esVersionen .esneu");
   if (punkt) punkt.remove();
+  const spalte = (liste, titel, aktuell) => `<div class="vsspalte">
+      <p class="esgh">${titel}</p>
+      <div class="esgrp">${liste
+        .map(
+          ({ v, i }) => `<button type="button" class="vszeile" data-version="${i}">
+            <b>${v.v.replace(/^Security /, "")}${v.v === aktuell ? ' <span class="vsjetzt">Aktuell</span>' : ""}</b>
+            <small>${v.kurz}</small>${CHEV}</button>`,
+        )
+        .join("")}</div></div>`;
+  const alle = VERSIONEN.map((v, i) => ({ v, i }));
   unterseiteOeffnen(
     "Versionen",
     "Einstellungen",
-    `<div class="esgrp">${VERSIONEN.map(
-      (v, i) => `<button type="button" class="esz eszhoch" data-version="${i}">
-        <span class="eszt">${v.v}${i === 0 ? ' <span class="vsjetzt">Aktuell</span>' : ""}
-          <small>${v.kurz}</small></span><em>${v.datum.split(" ")[0].slice(0, 3)}.</em>${CHEV}</button>`,
-    ).join("")}</div>
-     <p class="esfuss">Tippe auf eine Version, um zu lesen, was sich geändert hat.</p>`,
+    `<div class="vsspalten">
+       ${spalte(alle.filter((x) => !istSecurity(x.v)), "App", aktuelleApp())}
+       ${spalte(alle.filter((x) => istSecurity(x.v)), "Security", aktuelleSecurity())}
+     </div>`,
     (ebene) =>
       ebene.querySelectorAll("[data-version]").forEach((b) => (b.onclick = () => versionDetail(+b.dataset.version))),
   );
