@@ -2599,3 +2599,24 @@ html body #tagbar [data-tag][aria-pressed="true"] .ppunkte { bottom: 10px; }
 .sghinweis .sgspaeter {
   width: 30px; height: 30px; border: 0; border-radius: 50%; background: var(--fill); color: var(--muted); font: inherit; cursor: pointer;
 }
+
+/* Beta 1.7.3 · Auslastung nur an der Zahl: grün und kräftiger statt farbiger Kachel */
+html body #tagbar [data-tag][data-fuell]:not([aria-pressed="true"]),
+html body #tagbar [data-tag].abwesend:not([aria-pressed="true"]) {
+  background: transparent !important;
+  color: inherit !important;
+}
+html body #tagbar [data-tag]:not([aria-pressed="true"]) small { transition: color 0.3s ease; }
+html body #tagbar [data-tag][data-fuell="1"]:not([aria-pressed="true"]) small { color: color-mix(in srgb, #30d158 45%, var(--text)) !important; font-weight: 600 !important; opacity: 1 !important; }
+html body #tagbar [data-tag][data-fuell="2"]:not([aria-pressed="true"]) small { color: color-mix(in srgb, #30d158 70%, var(--text)) !important; font-weight: 700 !important; opacity: 1 !important; }
+html body #tagbar [data-tag][data-fuell="3"]:not([aria-pressed="true"]) small { color: color-mix(in srgb, #30d158 88%, var(--text)) !important; font-weight: 800 !important; opacity: 1 !important; }
+html body #tagbar [data-tag][data-fuell="4"]:not([aria-pressed="true"]) small { color: #30d158 !important; font-weight: 900 !important; opacity: 1 !important; }
+html body #tagbar [data-tag].abwesend:not([aria-pressed="true"]) small { color: #ff9f0a !important; font-weight: 800 !important; opacity: 1 !important; }
+
+.kwtag.f1::after, .kwtag.f2::after, .kwtag.f3::after, .kwtag.f4::after, .kwtag.abw::after { display: none !important; }
+.kwtag.f1 { color: color-mix(in srgb, #30d158 45%, var(--text)); font-weight: 600; }
+.kwtag.f2 { color: color-mix(in srgb, #30d158 70%, var(--text)); font-weight: 700; }
+.kwtag.f3 { color: color-mix(in srgb, #30d158 88%, var(--text)); font-weight: 800; }
+.kwtag.f4 { color: #30d158; font-weight: 900; }
+.kwtag.abw { color: #ff9f0a; font-weight: 800; }
+.kwtag.heute.f1, .kwtag.heute.f2, .kwtag.heute.f3, .kwtag.heute.f4, .kwtag.heute.abw { color: #fff; }

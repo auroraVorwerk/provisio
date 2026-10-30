@@ -33,11 +33,11 @@
         const weg = !fremd && typeof tagAbwesend === "function" ? tagAbwesend(key) : null;
         const st = !fremd && !weg && typeof fuellStufe === "function" ? fuellStufe(key) : 0;
         const pp = !fremd && !weg && typeof privatStufe === "function" ? privatStufe(key) : 0;
-        tage += `<span class="kwtag${fremd ? " fremd" : ""}${key === heute && !fremd ? " heute" : ""}${weg ? " abw" : st ? " f" + st : ""}">${fremd ? "" : d.getDate()}${pp ? punkteHTML(pp) : ""}</span>`;
+        tage += `<span data-keinzaehlen class="kwtag${fremd ? " fremd" : ""}${key === heute && !fremd ? " heute" : ""}${weg ? " abw" : st ? " f" + st : ""}">${fremd ? "" : d.getDate()}${pp ? punkteHTML(pp) : ""}</span>`;
       }
       const klasse = (+mo === +zeigMo ? " gezeigt" : "") + (+mo === +jetztMo ? " jetzt" : "");
       zeilen += `<button type="button" class="kwzeile${klasse}" data-kwmo="${dk(mo)}" aria-label="KW ${week}">
-        <span class="kwnr">${week}</span>${tage}</button>`;
+        <span class="kwnr" data-keinzaehlen>${week}</span>${tage}</button>`;
     }
     return `<section class="kwmonat">
       <h4>${MONATE[m]}${jahr !== new Date().getFullYear() ? " " + jahr : ""}</h4>
@@ -63,7 +63,7 @@
     modal.classList.add("open");
     sheet.innerHTML = `<header><div><h3>Woche wählen</h3><div class="when">KW ${isoWeek(zeigMo).week} · ${fmt(zeigMo)}</div></div>
         <button class="x" data-close aria-label="Schließen">✕</button></header>
-      <div class="kwliste">${html}</div>
+      <div class="kwliste" data-keinzaehlen>${html}</div>
       <div class="actions"><button class="btn primary" id="kwHeute">Diese Woche</button></div>`;
     sheetNormalisieren();
     const springen = (mo) => {

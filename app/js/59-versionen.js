@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.7.3",
+    datum: "Oktober 2026",
+    kurz: "Auslastung ruhiger: nur die Zahl färbt sich",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Statt farbiger Kacheln färbt sich nur noch das Datum – je voller der Tag, desto kräftiger grün und fetter. Abwesende Tage haben eine orange Zahl. Gilt im Planer und in der KW-Übersicht.",
+          "KW-Übersicht: Wochennummern und Tage zählen beim Öffnen nicht mehr kurz hoch, sondern stehen sofort richtig da.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.7",
     datum: "Oktober 2026",
     kurz: "Wochenmeldung: Promotion nach Gebiet",
