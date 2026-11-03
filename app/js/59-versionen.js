@@ -7,6 +7,20 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.8.3",
+    datum: "November 2026",
+    kurz: "Verträgt sich mit Provisio Online",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "Provisio Online kann auf demselben Gerät neben dieser App installiert sein. Beide haben getrennte Speicher; diese App räumt beim Aktualisieren nur noch ihre eigenen Zwischenspeicher auf.",
+          "An der Offline-App ändert sich sonst nichts: Daten bleiben ausschließlich auf dem Gerät.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.8.2",
     datum: "November 2026",
     kurz: "Eigene Zeile als Berufseinsteiger, Door to Door in der Einführung",
