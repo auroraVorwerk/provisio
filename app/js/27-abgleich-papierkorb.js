@@ -51,6 +51,7 @@ const MENUE = [
   ["wunsch", "Provisionswunsch"],
   ["provision", "Provisionsrechner"],
   ["ziele", "Ziele"],
+  ["jobtickets", "Jobtickets"],
   ["fahrten", "Fahrtenbuch"],
   ["jahr", "Jahresrückblick"],
   ["profil", "Profil"],

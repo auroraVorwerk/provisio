@@ -115,18 +115,16 @@ renderProv = function () {
         <h2 class="pvh">Teamprovision</h2>
         ${
           p.team.length
-            ? `<ul class="pvliste">${p.team
+            ? `<ul class="pvliste pvteam">${p.team
                 .map((x) =>
                   pvZeile(
                     entschaerfeText(x.name),
                     `${kwText(x.wochen)} · Umsatz netto ${pvEuro(x.nettoUm)}`,
-                    `<span class="pvsatz" data-keinzaehlen>${x.satz} %</span>${pvEuro(x.anteil)}`,
+                    `<span class="pvsatz" data-keinzaehlen>${x.satz} %</span><span class="pvbetr">${pvEuro(x.anteil)}</span>`,
                     x.geteilt ? "geteilt" : "",
                   ),
                 )
-                .join("")}${pvZeile("Gesamt", "", pvEuro(p.pTeam), "zwischen")}</ul>
-               <p class="pvnote">Den Satz wählst du jede Woche in der Wochenmeldung des Mitglieds. Wechselt er
-                 im Monat, stehen die Wochen getrennt. Der Versicherungszuschuss kommt auch auf die Teamprovision.</p>`
+                .join("")}${pvZeile("Gesamt", "", `<span class="pvbetr">${pvEuro(p.pTeam)}</span>`, "zwischen")}</ul>`
             : `<p class="pvnote">Lege unter <a href="#team">Teammitglieder</a> dein Team an und trag die
                  Wochenzahlen ein – dann erscheint hier deine Teamprovision.</p>`
         }

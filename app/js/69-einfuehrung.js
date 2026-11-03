@@ -80,7 +80,7 @@
 
   function sichern() {
     if (!T.aktiv) return;
-    settings.einfuehrung = { i: T.i, snap: T.snap, rolle: T.rolle, kk: T.kk, kat: T.kat };
+    settings.einfuehrung = { i: T.i, snap: T.snap, rolle: T.rolle, kk: T.kk, kat: T.kat, modus: T.modus, xp: T.xp, abzeichen: T.abzeichen };
     saveData();
   }
 
@@ -111,6 +111,7 @@
             ? finde(`#drawer a.navlink[data-page="${page}"]`)
             : finde(".tabbar .tabmehr"),
       frei: ["#drawer .navsuche", "#drawer input"],
+      nav: true,
       fertig: () => seite() === page && !menueOffen(),
     };
   }
@@ -168,10 +169,13 @@
   const kap = (name, schritte) => schritte.forEach((s) => KAPITEL.push({ ...s, kap: name }));
 
   kap("Willkommen", [
-    info(
-      "Willkommen bei Provisio",
-      "In dieser Einführung probierst du jede Funktion einmal selbst aus – wie in einem Spiel. Der Lichtkreis zeigt dir, wohin du tippst. Alles, was du jetzt anlegst, sind Beispiele: Am Ende löschst du sie wieder, dann gehört die App dir.",
-    ),
+    {
+      ...info(
+        "Willkommen bei Provisio",
+        "Spiel dich durch die App: Jedes Kapitel ist ein Level, jeder Schritt bringt XP, jedes Level ein Abzeichen. Der Lichtkreis zeigt, wohin du tippst. Alles, was du anlegst, sind Beispiele – am Ende räumst du sie weg.",
+      ),
+      zweit: ["Ich kenne Provisio schon", () => ueberspringen()],
+    },
     info(
       "Deine Leiste",
       "Unten ist deine Leiste: Heute, Planer, K70, Provision und Mehr. Die Markierung zeigt, wo du gerade bist. Unter „Mehr“ liegt alles Weitere.",
@@ -529,6 +533,15 @@
       start: (s) => (s.f = fp(() => nachtrag)),
       fertig: (s) => fp(() => nachtrag) !== s.f,
     },
+    { ...hin("jahr", "Jahresrückblick"), seit: "1.8" },
+    {
+      ...info(
+        "Abrechnung als PDF",
+        "Noch schneller: Mit diesem Knopf wählst du deine Provisionsabrechnung als PDF. Provisio liest Einheiten, Nettoumsatz, Aufträge und abgerechneten FG-Umsatz – als Teamleiterin auch Teamumsatz und Berufseinsteiger – und zeigt alles zur Kontrolle. Die PDF wird nicht gespeichert.",
+        () => finde("#pdfJahr"),
+      ),
+      seit: "1.8",
+    },
   ]);
 
   kap("Geld und Ziele", [
@@ -571,6 +584,16 @@
       ziel: fensterOder(() => finde("#lzNeu")),
       start: (s) => (s.f = fp(() => settings.langziel)),
       fertig: (s) => fp(() => settings.langziel) !== s.f && !fensterOffen(),
+    },
+    { ...hin("jobtickets", "Jobtickets"), seit: "1.8" },
+    {
+      titel: "Jobticket zählen",
+      text: "Hier zählst du Jobtickets und qualifizierte Anmeldungen fürs Jahr – sie fließen in deine Ziele. Tippe bei „Zusätzliche Jobtickets“ auf Plus.",
+      ziel: () => finde('#jobt [data-jplus="jbManuell"]') || finde("#jobt [data-jplus]"),
+      frei: ["[data-jplus]", "[data-jminus]"],
+      start: (s) => (s.f = fp(() => jobtickets)),
+      fertig: (s) => fp(() => jobtickets) !== s.f,
+      seit: "1.8",
     },
   ]);
 
@@ -670,6 +693,60 @@
     },
   ]);
 
+  const d2dFeld = () =>
+    [...document.querySelectorAll("button.slot.filled[data-day][data-hour]")].find((el) => {
+      const e = entries[key(el.dataset.day, +el.dataset.hour)];
+      return e && e.kind === "d2d" && sichtbar(el);
+    }) || null;
+  kap("Door to Door", [
+    { ...hin("profil", "Zu den Einstellungen"), seit: "1.8" },
+    {
+      titel: "Weitere Funktionen",
+      text: () =>
+        unterOffen()
+          ? settings.d2d
+            ? "Eingeschaltet! Tippe oben links auf „Einstellungen“, um zurückzugehen."
+            : "Schalte „Door to Door Selling“ ein."
+          : "Etwas versteckt: Tippe unten in den Einstellungen auf „Weitere Funktionen“.",
+      ziel: () => (unterOffen() ? $(".unter:last-of-type") : finde("#esWeitere")),
+      unter: true,
+      fertig: () => !!settings.d2d && !unterOffen(),
+      seit: "1.8",
+    },
+    { ...hin("planer", "Zurück in den Planer"), seit: "1.8" },
+    {
+      titel: "Door to Door anlegen",
+      text: () =>
+        anlegeText({
+          leer: "Tippe auf ein freies Feld – dort planst du deinen Einsatz an den Türen.",
+          wahl: "Door to Door Selling",
+          d2dneu: "Von und Bis einstellen, dann „Speichern“.",
+          sonst: "Folge dem Fenster bis „Speichern“.",
+        }),
+      ziel: fensterOder(() => freiesFeld([17, 16, 18, 15, 10, 11])),
+      start: (s) => (s.n = zaehl("d2d")),
+      fertig: (s) => zaehl("d2d") > s.n && !fensterOffen(),
+      seit: "1.8",
+    },
+    {
+      titel: "Strichliste an der Tür",
+      text: () =>
+        fensterOffen()
+          ? "Jede Kachel ist ein Zähler: Tippe dreimal auf „Türen“. Mit Minus nimmst du einen Strich zurück. Darunter: Kontakt merken, Kurz raus, Verkauf erfassen und Kein Kauf."
+          : "Tippe auf deinen Door-to-Door-Einsatz.",
+      ziel: fensterOder(() => d2dFeld()),
+      fertig: () => Object.values(entries).some((e) => e && e.kind === "d2d" && (+(e.nb || {}).tueren || 0) >= 3),
+      seit: "1.8",
+    },
+    {
+      titel: "Einsatz schließen",
+      text: "Alles wird sofort gespeichert. Schließ das Fenster mit dem Kreuz.",
+      ziel: () => (fensterOffen() ? finde("#sheet header .x") || $("#sheet") : null),
+      fertig: () => !fensterOffen(),
+      seit: "1.8",
+    },
+  ]);
+
   kap("Team", [
     hin("team", "Teammitglieder"),
     {
@@ -688,6 +765,19 @@
       ziel: fensterOder(() => finde("[data-mmel]")),
       start: (s) => (s.f = fp(() => settings.teamMeldungen)),
       fertig: (s) => fp(() => settings.teamMeldungen) !== s.f && !fensterOffen(),
+    },
+    { ...hin("team", "Teammitglieder"), seit: "1.8", wenn: () => istTeamleiter() && (settings.teamManuell || []).length > 0 },
+    {
+      titel: "Andere Woche nachtragen",
+      text: () =>
+        fensterOffen()
+          ? "Oben wählst du jede Woche dieses Vertriebsmonats – so trägst du auch eine vergangene Woche nach. Zahl eintragen, dann „Woche speichern“."
+          : "Unter jedem Teammitglied stehen die Wochen des Vertriebsmonats – grün ist schon eingetragen. Tippe auf eine noch graue Woche.",
+      ziel: fensterOder(() => finde(".tmwochen button:not(.da)") || finde(".tmwochen button")),
+      start: (s) => (s.f = fp(() => settings.teamMeldungen)),
+      fertig: (s) => fp(() => settings.teamMeldungen) !== s.f && !fensterOffen(),
+      seit: "1.8",
+      wenn: () => istTeamleiter() && (settings.teamManuell || []).length > 0,
     },
     hin("teammeldung", "Wochenmeldung"),
     {
@@ -736,6 +826,34 @@
       fertig: () => snapLeer() && datenLeer(),
     },
   ]);
+
+  /* ---------- Welche Schritte laufen: alles oder nur das Neue ---------- */
+  const STAND = "1.8"; // bei jedem Update mit neuen Funktionen anheben und Schritte mit seit: markieren
+  const NEU_LISTE = [
+    {
+      ...info(
+        `Neu in Beta ${STAND}`,
+        "Seit deinem letzten Besuch ist einiges dazugekommen. In ein paar Minuten probierst du jede neue Funktion einmal aus – mit XP und Abzeichen. Danach wird wieder alles aufgeräumt.",
+      ),
+      kap: "Neu",
+      zweit: ["Später", () => ueberspringen()],
+    },
+    ...KAPITEL.filter((k) => k.seit === STAND),
+    {
+      titel: "Alles Neue gesehen",
+      text: "Deine echten Daten wurden vorher gesichert. Tippe auf „Fertig“ – die Beispiele verschwinden und alles ist wie vorher.",
+      knopf: () => ["Fertig", () => abschliessen()],
+      kap: "Neu",
+    },
+  ];
+  let LISTE = KAPITEL;
+  const aelter = (a, b) => {
+    const x = String(a).split(".").map(Number),
+      y = String(b).split(".").map(Number);
+    for (let i = 0; i < Math.max(x.length, y.length); i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0);
+    return false;
+  };
+  const listeFuer = (modus) => (modus === "neu" ? NEU_LISTE : KAPITEL);
 
   function snapLeer() {
     if (!T.snap) return true;
@@ -797,7 +915,11 @@
   let letztesZiel = null;
   function zeichnen() {
     if (!T.aktiv) return;
-    const st = KAPITEL[T.i];
+    if (karte.classList.contains("level")) {
+      laufTakt = requestAnimationFrame(zeichnen);
+      return;
+    }
+    const st = LISTE[T.i];
     if (!st) return;
     const z = zielVon(st);
     if (z !== letztesZiel) {
@@ -831,11 +953,16 @@
   }
 
   function karteFuellen() {
-    const st = KAPITEL[T.i];
-    const kapitel = [...new Set(KAPITEL.map((k) => k.kap))];
-    karte.querySelector(".tutkap").textContent = `Kapitel ${kapitel.indexOf(st.kap) + 1} von ${kapitel.length} · ${st.kap}`;
-    karte.querySelector(".tutzahl").textContent = `${T.i + 1} / ${KAPITEL.length}`;
-    karte.querySelector(".tutbalken i").style.width = `${((T.i + 1) / KAPITEL.length) * 100}%`;
+    const st = LISTE[T.i];
+    const kapitel = [...new Set(LISTE.map((k) => k.kap))].filter((k) => k !== "Willkommen");
+    karte.querySelector(".tutkap").textContent =
+      T.modus === "neu"
+        ? `Neu in Beta ${STAND}`
+        : st.kap === "Willkommen"
+          ? `Einführung · ${kapitel.length} Level`
+          : `Level ${kapitel.indexOf(st.kap) + 1} von ${kapitel.length} · ${st.kap}`;
+    karte.querySelector(".tutzahl").innerHTML = `<span class="tutxp">★ ${T.xp || 0} XP</span>`;
+    karte.querySelector(".tutbalken i").style.width = `${((T.i + 1) / LISTE.length) * 100}%`;
     karte.querySelector(".tuttitel").textContent = st.titel;
     karte.classList.remove("geschafft", "klein");
     const kn = karte.querySelector(".tutknoepfe");
@@ -849,6 +976,14 @@
       b.onclick = extra ? extra[1] : () => weiter();
       kn.appendChild(b);
     }
+    if (st.zweit) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "tutzweit";
+      b.textContent = st.zweit[0];
+      b.onclick = st.zweit[1];
+      kn.appendChild(b);
+    }
     const weg = karte.querySelector(".tutweg");
     weg.hidden = true;
     clearTimeout(ueberspringTakt);
@@ -859,9 +994,14 @@
   }
 
   function schrittStarten() {
-    const st = KAPITEL[T.i];
+    const st = LISTE[T.i];
     if (!st) return abschliessen();
     if (st.wenn && !st.wenn()) return weiter(true);
+    /* Schon auf der richtigen Seite: Navigationsschritt still überspringen */
+    try {
+      if (st.nav && st.fertig && st.fertig()) return weiter(true);
+    } catch (e) {}
+    if (!st.nav && menueOffen() && typeof setMenu === "function") setMenu(false);
     /* Tastatur und Vorschlagslisten vom vorigen Schritt schließen */
     const fokus = document.activeElement;
     if (fokus && /INPUT|TEXTAREA|SELECT/.test(fokus.tagName) && !fokus.closest("#modal")) fokus.blur();
@@ -884,8 +1024,14 @@
 
   function weiter(ohneHaken) {
     clearTimeout(ueberspringTakt);
+    const st = LISTE[T.i] || {};
     if (!ohneHaken) {
       karte.classList.add("geschafft");
+      let plus = st.info ? 5 : 10;
+      const schnell = !st.info && Date.now() - T.seit < 12000;
+      if (schnell) plus += 5;
+      T.xp = (T.xp || 0) + plus;
+      xpZeigen(plus, schnell);
       try {
         if (typeof stups === "function") stups(12);
       } catch (e) {}
@@ -893,16 +1039,59 @@
     T.geschafft = true;
     setTimeout(
       () => {
+        const alt = st.kap;
         T.i++;
-        if (T.i >= KAPITEL.length) return abschliessen();
+        if (T.i >= LISTE.length) return abschliessen();
+        const neu = LISTE[T.i] && LISTE[T.i].kap;
+        if (T.modus !== "neu" && alt && neu && alt !== neu && alt !== "Willkommen") return levelKarte(alt, neu);
         schrittStarten();
       },
       ohneHaken ? 0 : 650,
     );
   }
 
+  /* ---------- Spiel: XP, Level, Abzeichen ---------- */
+  const ABZEICHEN = {
+    Planer: "🗓️", Heute: "☀️", "Verkäufe": "💶", Kunden: "👥", Zahlen: "📊", "Geld und Ziele": "🎯",
+    Unterwegs: "🚗", Einstellungen: "⚙️", "Door to Door": "🚪", Team: "🤝", "Aufräumen": "🧹",
+  };
+  function xpZeigen(plus, schnell) {
+    const x = karte.querySelector(".tutxp");
+    if (x) x.textContent = `★ ${T.xp} XP`;
+    const f = document.createElement("span");
+    f.className = "tutplus";
+    f.textContent = `+${plus} XP${schnell ? " · schnell!" : ""}`;
+    karte.appendChild(f);
+    setTimeout(() => f.remove(), 1200);
+  }
+  function levelKarte(alt, neu) {
+    const kapitel = [...new Set(LISTE.map((k) => k.kap))].filter((k) => k !== "Willkommen");
+    const nr = kapitel.indexOf(alt);
+    T.abzeichen = [...new Set([...(T.abzeichen || []), alt])];
+    sichern();
+    karte.classList.remove("geschafft", "oben", "klein");
+    karte.classList.add("level");
+    ring.style.opacity = "0";
+    dimm.style.opacity = "1";
+    karte.querySelector(".tutkap").textContent = `Level ${nr + 1} geschafft`;
+    karte.querySelector(".tuttitel").innerHTML = `<span class="tutabz">${ABZEICHEN[alt] || "🏅"}</span>${alt}`;
+    karte.querySelector(".tuttext").textContent = `Abzeichen „${alt}“ freigeschaltet. Weiter geht’s mit ${neu}.`;
+    karte.querySelector(".tutbalken i").style.width = `${((nr + 1) / kapitel.length) * 100}%`;
+    const kn = karte.querySelector(".tutknoepfe");
+    kn.innerHTML = `<div class="tutkarte-level">${kapitel
+      .map((k) => `<span class="${(T.abzeichen || []).includes(k) ? "an" : ""}" title="${k}">${ABZEICHEN[k] || "•"}</span>`)
+      .join("")}</div><button type="button" class="tutlos">Weiter zu Level ${nr + 2}: ${neu}</button>`;
+    kn.querySelector(".tutlos").onclick = () => {
+      karte.classList.remove("level");
+      schrittStarten();
+    };
+    karte.classList.remove("rein");
+    void karte.offsetWidth;
+    karte.classList.add("rein");
+  }
+
   function zuAnker(name) {
-    const i = KAPITEL.findIndex((k) => k.anker === name);
+    const i = LISTE.findIndex((k) => k.anker === name);
     if (i < 0 || i === T.i) return;
     T.i = i;
     schrittStarten();
@@ -910,7 +1099,7 @@
 
   function pruefen() {
     if (!T.aktiv || T.geschafft) return;
-    const st = KAPITEL[T.i];
+    const st = LISTE[T.i];
     if (!st || st.info) return;
     try {
       if (st.fertig && st.fertig(T.s)) return weiter();
@@ -939,7 +1128,7 @@
   function sperre(ev) {
     if (!T.aktiv) return;
     if (!ev.isTrusted) return; // Klicks, die die App selbst auslöst (z. B. „Mehr“ → Menü)
-    const st = KAPITEL[T.i];
+    const st = LISTE[T.i];
     if (!st) return;
     if (erlaubt(ev.target, st)) {
       if (ev.type === "click") T.klicks.push(ev.target);
@@ -959,16 +1148,20 @@
     "focusin",
     (ev) => {
       if (!T.aktiv) return;
-      const st = KAPITEL[T.i];
+      const st = LISTE[T.i];
       if (st && !erlaubt(ev.target, st) && ev.target.blur) ev.target.blur();
     },
     true,
   );
 
   /* ---------- Start, Fortsetzen, Ende ---------- */
-  function starten(fortsetzen) {
+  function starten(fortsetzen, modus) {
     bauen();
+    if (modus) T.modus = modus;
+    LISTE = listeFuer(T.modus);
     if (!fortsetzen) {
+      T.xp = 0;
+      T.abzeichen = [];
       const blob = clean(dataBlob());
       if (blob.settings) {
         delete blob.settings.einfuehrung;
@@ -996,7 +1189,11 @@
     clearInterval(pruefTakt);
     pruefTakt = setInterval(pruefen, 250);
   }
-  window.einfuehrungStarten = () => starten(false);
+  window.einfuehrungStarten = (modus) => starten(false, modus || "voll");
+  function ueberspringen() {
+    T.uebersprungen = true;
+    abschliessen();
+  }
 
   async function abschliessen() {
     clearInterval(pruefTakt);
@@ -1013,6 +1210,7 @@
       applyData(null);
     }
     settings.einfuehrungFertig = true;
+    settings.einfuehrungStand = STAND;
     delete settings.einfuehrung;
     try {
       if (T.kat && T.kat.liste) {
@@ -1039,15 +1237,21 @@
     wurzel.classList.add("tutende");
     ring.style.opacity = "0";
     dimm.style.opacity = "1";
-    karte.querySelector(".tutkap").textContent = "Einführung abgeschlossen";
-    karte.querySelector(".tutzahl").textContent = "";
+    const ueber = T.uebersprungen;
+    T.uebersprungen = false;
+    karte.querySelector(".tutkap").textContent = ueber ? "Einführung übersprungen" : T.modus === "neu" ? `Neu in Beta ${STAND}` : "Alle Level geschafft";
+    karte.querySelector(".tutzahl").innerHTML = ueber ? "" : `<span class="tutxp">★ ${T.xp || 0} XP</span>`;
     karte.querySelector(".tutbalken i").style.width = "100%";
-    karte.querySelector(".tuttitel").textContent = "Die App gehört dir";
-    karte.querySelector(".tuttext").textContent =
-      "Alle Beispiele sind gelöscht. Du kennst jede Funktion – jetzt geht es mit deinen echten Terminen los. Die Einführung kannst du jederzeit in den Einstellungen wiederholen.";
+    karte.querySelector(".tuttitel").textContent = ueber ? "Viel Erfolg!" : T.modus === "neu" ? "Du bist auf dem neuesten Stand" : "Die App gehört dir";
+    karte.querySelector(".tuttext").textContent = ueber
+      ? "Du kannst die Einführung jederzeit unter Einstellungen → Info → Einführung starten nachholen."
+      : T.modus === "neu"
+        ? "Alle neuen Funktionen ausprobiert, die Beispiele sind weg."
+        : "Alle Beispiele sind gelöscht. Du kennst jede Funktion – jetzt geht es mit deinen echten Terminen los. Die Einführung kannst du jederzeit in den Einstellungen wiederholen.";
     karte.querySelector(".tutweg").hidden = true;
     const kn = karte.querySelector(".tutknoepfe");
-    kn.innerHTML = `<button type="button" class="tutlos">Los geht’s</button>`;
+    const abz = (T.abzeichen || []).map((k) => ABZEICHEN[k] || "🏅").join("");
+    kn.innerHTML = `${!ueber && abz ? `<div class="tutkarte-level alle">${abz}</div>` : ""}<button type="button" class="tutlos">Los geht’s</button>`;
     kn.querySelector("button").onclick = () => {
       wurzel.hidden = true;
       karte.classList.remove("ende");
@@ -1063,20 +1267,27 @@
     if (!me || T.aktiv) return;
     const st = settings.einfuehrung;
     if (st && typeof st.i === "number") {
-      T.i = Math.min(st.i, KAPITEL.length - 1);
+      T.modus = st.modus || "voll";
+      LISTE = listeFuer(T.modus);
+      T.xp = st.xp || 0;
+      T.abzeichen = st.abzeichen || [];
+      T.i = Math.min(st.i, LISTE.length - 1);
       T.snap = st.snap || null;
       T.rolle = st.rolle || (me && me.rolle);
       T.kk = st.kk || null;
       T.kat = st.kat || null;
       /* Fortsetzen am Anfang eines Ankerschritts, falls ein Fenster nötig war */
-      const k = KAPITEL[T.i];
+      const k = LISTE[T.i];
       if (k && k.zurueck) {
-        const a = KAPITEL.findIndex((x) => x.anker === k.zurueck);
+        const a = LISTE.findIndex((x) => x.anker === k.zurueck);
         if (a >= 0) T.i = a;
       }
       return warteAufRuhe(() => starten(true));
     }
-    if (!settings.einfuehrungFertig && datenLeer()) warteAufRuhe(() => starten(false));
+    if (!settings.einfuehrungFertig && datenLeer()) return warteAufRuhe(() => starten(false, "voll"));
+    /* Bestehende Nutzer: nach einem Update nur das Neue */
+    const demoOhne = window.DEMO_AKTIV && !/demo=neu/.test(location.search);
+    if (!demoOhne && aelter(settings.einfuehrungStand || "0", STAND) && NEU_LISTE.length > 2) warteAufRuhe(() => starten(false, "neu"));
   }
   /* Erst starten, wenn kein anderes Fenster (z. B. Wiederherstellungs-Code) offen ist */
   function warteAufRuhe(fn) {
@@ -1129,7 +1340,7 @@
           if (T.aktiv) return;
           if (confirm("Einführung starten? Deine Daten werden vorher gesichert und am Ende exakt wiederhergestellt.")) {
             location.hash = "#heute";
-            setTimeout(() => starten(false), 300);
+            setTimeout(() => starten(false, "voll"), 300);
           }
         };
         v.parentNode.insertBefore(b, v);
@@ -1140,5 +1351,6 @@
 
   /* Für Tests */
   window.einfuehrungKapitel = KAPITEL;
-  window.einfuehrungZiel = () => (T.aktiv && KAPITEL[T.i] ? zielVon(KAPITEL[T.i]) : null);
+  Object.defineProperty(window, "einfuehrungListe", { get: () => LISTE });
+  window.einfuehrungZiel = () => (T.aktiv && LISTE[T.i] ? zielVon(LISTE[T.i]) : null);
 })();

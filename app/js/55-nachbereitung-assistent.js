@@ -226,7 +226,7 @@
     ["Mein Tag", ["heute", "planer", "verkaeufe", "wiedervorlage"]],
     ["Kunden", ["kunden", "potenzial", "empfehlung", "interessenten"]],
     ["Zahlen", ["statistik", "auswertungen", "jahr"]],
-    ["Geld und Ziele", ["provision", "wunsch", "ziele"]],
+    ["Geld und Ziele", ["provision", "wunsch", "ziele", "jobtickets"]],
     ["Unterwegs", ["inventur", "fahrten"]],
   ];
   function menueGruppieren() {

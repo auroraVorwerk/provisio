@@ -39,7 +39,7 @@ function gpBloecke(day) {
     const e = entries[key(day, h)];
     if (!e) return;
     /* Feste Blöcke ohne Ankunftsfenster – Titel steht oben (Terminieren und Büro gehören dazu) */
-    const fest = ["meeting", "privat", "individuell", "terminieren", "buero"].includes(e.kind);
+    const fest = ["meeting", "privat", "individuell", "terminieren", "buero", "d2d"].includes(e.kind);
     let von = h,
       bis = h + 2;
     if (!fest && e.kind === "terminieren" && e.bis) {

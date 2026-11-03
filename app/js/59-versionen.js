@@ -7,6 +7,30 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.8",
+    datum: "November 2026",
+    kurz: "PDF-Abrechnung, Door to Door, Einführung als Spiel",
+    teile: [
+      [
+        "Neu",
+        [
+          "Abrechnung als PDF übernehmen – im Jahresrückblick und im Teamumsatz: Provisio findet die Leistungsübersicht, gleicht deine Partner-Nummer ab und liest Einheiten, Nettoumsatz, Aufträge und abgerechneten FG-Umsatz. Als Teamleiterin dazu Teamumsatz netto („Summe mit TL“) und den Umsatz aller Berufseinsteiger (bis 52 Wochen dabei). Alles auf volle Euro abgerundet, zur Kontrolle angezeigt; die PDF wird nicht gespeichert.",
+          "Door to Door Selling als eigene Terminart (Einstellungen → Weitere Funktionen): Strichliste auf einer Seite und die Knöpfe Kontakt merken, Kurz raus, Verkauf erfassen und Kein Kauf.",
+          "Jobtickets wieder als Menüpunkt unter „Geld und Ziele“ – ohne Kampagnen.",
+          "Team-Wochenmeldung: jede Woche des Vertriebsmonats lässt sich nachtragen, übersichtlich in Gruppen mit Plus und Minus.",
+          "Einführung als Spiel: Level, XP und Abzeichen. Mit „Ich kenne Provisio schon“ überspringbar. Nach Updates gibt es eine kurze Tour nur durch das Neue.",
+        ],
+      ],
+      [
+        "Verbessert",
+        [
+          "Teamprovision: Satz und Betrag stehen in geraden Spalten, ohne Erklärtext.",
+          "Wochenmeldung im Team: gerade Spalten, die Namensspalte bleibt beim Wischen deckend stehen.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.7.4",
     datum: "Oktober 2026",
     kurz: "Versionsverlauf getrennt nach App und Security",

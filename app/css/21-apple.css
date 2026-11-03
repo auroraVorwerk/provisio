@@ -2664,3 +2664,124 @@ html body #tagbar [data-tag].abwesend:not([aria-pressed="true"]) small { color: 
 }
 .vssec b { font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: #30d158; }
 .vssec span { font-size: 14px; color: var(--muted); }
+
+/* Beta 1.8 · PDF-Import */
+.pdfimport { display: flex !important; align-items: center; justify-content: center; gap: 8px; margin: 4px auto 16px !important; max-width: 460px; }
+.pigitter { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.piwahl { display: flex; align-items: center; gap: 10px; padding: 10px 2px; font-size: 15px; cursor: pointer; }
+.piwahl input { width: 20px; height: 20px; accent-color: var(--accent); }
+.pdflaedt { display: flex; justify-content: center; padding: 24px 0; }
+.pdflaedt span { width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--fill2); border-top-color: var(--accent); animation: kreisel 0.8s linear infinite; }
+
+/* Beta 1.8 · Jobtickets ohne Kampagnen und Prämien */
+html body #jobt .praemie,
+html body #jobt .kampsec { display: none !important; }
+html body #jobt .anmtitel { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+html body #jobt .anmtitel h3 { margin: 0 !important; padding: 0 !important; flex: 1; text-align: left !important; justify-content: flex-start !important; }
+html body #jobt .anmtitel h3::before { display: none !important; }
+
+/* Beta 1.8 · Teamprovision: Satz und Betrag in festen Spalten */
+.pvteam .pvz b {
+  display: grid;
+  grid-template-columns: 52px 92px;
+  align-items: center;
+  justify-items: end;
+}
+.pvteam .pvz .pvsatz { margin: 0; justify-self: center; min-width: 44px; text-align: center; }
+.pvteam .pvz .pvbetr { grid-column: 2; }
+.pvteam .pvz.zwischen b { grid-template-columns: 52px 92px; }
+
+/* Beta 1.8 · Team-Wochenmeldung: gerade Spalten, Namensspalte deckend */
+html body .tmtab { border-collapse: separate !important; border-spacing: 0 !important; }
+html body .tmtab th,
+html body .tmtab td {
+  border-radius: 0 !important;
+  height: 46px;
+  padding: 0 14px !important;
+  vertical-align: middle;
+  white-space: nowrap;
+  background-clip: padding-box;
+}
+html body .tmtab td.v, html body .tmtab th:not(.fixspalte) { text-align: right; }
+html body .tmtab .fixspalte {
+  position: sticky !important;
+  left: 0;
+  z-index: 3 !important;
+  min-width: 128px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--bg) !important;
+  box-shadow: none !important;
+  border-right: 1px solid var(--line) !important;
+}
+html body .tmtab thead .fixspalte { z-index: 4 !important; }
+html body .tmtab .tmsumme .fixspalte { background: var(--bg) !important; }
+html body .tmtab .chip.mini { padding: 1px 7px !important; font-size: 11px !important; line-height: 1.4; vertical-align: 1px; }
+html body .tmtab tr.tmzeile { animation: none !important; }
+html body .tmtab .fixspalte { box-shadow: 8px 0 10px -8px rgba(0, 0, 0, 0.7) !important; }
+
+/* Beta 1.8 · Wochenmeldung eines Mitglieds */
+.mmwochen { display: flex; gap: 6px; margin: 2px 0 14px; overflow-x: auto; }
+.mmwochen button {
+  flex: 1; min-width: 64px; padding: 10px 6px; border: 0; border-radius: 12px; background: var(--fill);
+  color: var(--text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; position: relative;
+}
+.mmwochen button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.mmwochen button i { position: absolute; top: 3px; right: 6px; font-style: normal; font-size: 10px; color: #30d158; }
+.mmwochen button[aria-pressed="true"] i { color: #fff; }
+.mmtitel { margin: 16px 4px 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.mmgruppe { border-radius: 16px; background: var(--fill); padding: 0 14px; }
+.mmz { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 52px; border-bottom: 0.5px solid var(--haar); font-size: 15.5px; }
+.mmz:last-child { border-bottom: 0; }
+.mmz > span:first-child { flex: 1; }
+.mmstep { display: flex; align-items: center; gap: 4px; }
+.mmstep button {
+  width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--fill2); color: var(--text);
+  font: inherit; font-size: 20px; line-height: 1; cursor: pointer;
+}
+.mmstep input, .mmbetrag input {
+  width: 52px; height: 36px; padding: 0 !important; border: 0 !important; border-radius: 10px !important;
+  background: transparent !important; color: var(--text); font: inherit; font-size: 17px !important; font-weight: 600;
+  text-align: center; font-variant-numeric: tabular-nums; box-shadow: none !important; min-height: 0 !important;
+}
+.mmbetrag { display: flex; align-items: center; gap: 4px; background: var(--fill2); border-radius: 10px; padding: 0 10px; }
+.mmbetrag input { width: 92px; text-align: right; }
+.mmbetrag em { font-style: normal; color: var(--muted); }
+.mmsatz { display: flex; gap: 4px; }
+.mmsatz button { padding: 7px 12px; border: 0; border-radius: 10px; background: var(--fill2); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+.mmsatz button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.tmwochen { display: flex; gap: 6px; margin: 8px 0 2px; }
+.tmwochen button {
+  flex: 1; padding: 6px 4px; border: 0; border-radius: 9px; background: var(--fill); color: var(--muted);
+  font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+}
+.tmwochen button.da { background: color-mix(in srgb, #30d158 22%, transparent); color: #30d158; }
+html body #modal .sheet .mmbetrag input,
+html body #modal .sheet .mmstep input { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+
+/* Beta 1.8 · Door to Door: alles auf einer Seite */
+.d2dliste { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 2px 0 14px; }
+.d2dfeld {
+  position: relative; display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  min-height: 92px; padding: 12px 14px; border-radius: 18px; background: var(--fill);
+  cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.d2dfeld:active { background: var(--fill2); }
+.d2dfeld .d2dt { font-size: 13.5px; color: var(--muted); font-weight: 600; }
+.d2dfeld b { font-size: 34px; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.d2dfeld[data-d2dplus="verkaeufe"] b { color: #30d158; }
+.d2dfeld.tick b { animation: d2dTick 0.3s var(--feder, ease); }
+@keyframes d2dTick { 40% { transform: scale(1.18); } }
+.d2dminus {
+  position: absolute; right: 8px; bottom: 8px; width: 32px; height: 32px; border: 0; border-radius: 50%;
+  background: var(--fill2); color: var(--text); font: inherit; font-size: 18px; line-height: 1; cursor: pointer;
+}
+.d2dknoepfe { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.d2dknoepfe .btn { min-height: 50px; margin: 0 !important; }
+#d2dZurueck {
+  position: fixed; left: 50%; translate: -50% 0; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 53;
+  padding: 12px 18px; border: 0; border-radius: 999px; background: #4FC8B0; color: #062019;
+  font: inherit; font-weight: 700; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); cursor: pointer;
+}
+html.duo-zu #d2dZurueck { left: 16px; translate: 0 0; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }

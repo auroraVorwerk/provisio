@@ -15,7 +15,7 @@
   const TAG_VON = 8,
     TAG_BIS = 22,
     LAENGE = TAG_BIS - TAG_VON;
-  const ARBEIT = new Set(["kunde", "premium", "terminieren", "abholen", "meeting", "buero", "individuell", "messe"]);
+  const ARBEIT = new Set(["kunde", "premium", "terminieren", "abholen", "meeting", "buero", "individuell", "messe", "d2d"]);
   const FREI = new Set(["abgesagt", "verschoben"]);
 
   const dez = (t) => {

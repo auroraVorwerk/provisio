@@ -167,3 +167,25 @@ body.hell #tut .tutring { box-shadow: 0 0 0 2px var(--accent), 0 0 0 7px rgba(59
 @media print { #tut { display: none !important; } }
 html.duo-zu #tut .tutkarte.oben { bottom: auto; }
 html.duo-zu #tut .tutkarte.ende { bottom: auto; }
+
+/* Beta 1.8 · Einführung als Spiel */
+#tut .tutxp { display: inline-block; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, #ffd60a 22%, transparent); color: #ffd60a; font-weight: 700; }
+#tut .tutplus {
+  position: absolute; right: 16px; top: 34px; padding: 4px 10px; border-radius: 999px; background: #ffd60a; color: #2a2000;
+  font-size: 13px; font-weight: 800; pointer-events: none; animation: tutPlus 1.2s var(--feder, ease) forwards;
+}
+@keyframes tutPlus { 0% { opacity: 0; transform: translateY(8px) scale(0.8); } 20% { opacity: 1; transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px); } }
+#tut .tutzweit { display: block; width: 100%; margin-top: 8px; padding: 10px; border: 0; border-radius: 14px; background: var(--fill, rgba(120,140,165,.14)); color: var(--text); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+#tut .tutkarte.level { top: 50%; bottom: auto; transform: translateY(-50%); text-align: center; }
+#tut .tutkarte.level.rein { animation: tutLevel 0.55s var(--feder, ease) both; }
+@keyframes tutLevel { from { opacity: 0; transform: translateY(-50%) scale(0.85); } to { opacity: 1; transform: translateY(-50%); } }
+#tut .tutkarte.level .tuttitel { flex-direction: column; justify-content: center; gap: 6px; font-size: 22px; }
+#tut .tutkarte.level .tuttitel::after { display: none; }
+#tut .tutabz { display: grid; place-items: center; width: 76px; height: 76px; margin: 4px auto 0; border-radius: 50%; font-size: 40px;
+  background: radial-gradient(circle at 35% 30%, #fff6c2, #ffd60a 45%, #c98a00); box-shadow: 0 8px 24px rgba(255, 214, 10, 0.35); animation: tutAbz 0.8s var(--feder, ease) both; }
+@keyframes tutAbz { 0% { transform: scale(0) rotate(-30deg); } 70% { transform: scale(1.12) rotate(6deg); } 100% { transform: none; } }
+#tut .tutkarte-level { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 4px 0 12px; }
+#tut .tutkarte-level span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--fill, rgba(120,140,165,.14)); font-size: 15px; filter: grayscale(1); opacity: 0.45; }
+#tut .tutkarte-level span.an { filter: none; opacity: 1; background: color-mix(in srgb, #ffd60a 25%, transparent); }
+#tut .tutkarte-level.alle { font-size: 22px; letter-spacing: 4px; }
+html.duo-zu #tut .tutkarte.level { bottom: auto; }
