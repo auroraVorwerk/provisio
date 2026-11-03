@@ -7,6 +7,52 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.8.4",
+    datum: "November 2026",
+    kurz: "Sicherheit: Eingabeschutz, stärkere Verschlüsselung, neuer PDF-Leser",
+    teile: [
+      [
+        "Sicherheit",
+        [
+          "Mehrere Verbesserungen vor dem externen Sicherheitstest – Details unter Security 1.2.",
+          "Die erste Anmeldung nach dem Update dauert einmalig etwas länger: Der Zugang wird auf die stärkere Verschlüsselung umgestellt.",
+        ],
+      ],
+    ],
+  },
+  {
+    v: "Security 1.2",
+    datum: "3. November 2026",
+    ab: "Beta 1.8.4",
+    kurz: "Härtung vor dem externen Penetrationstest",
+    teile: [
+      ["Geltungsbereich", ["Gilt für die Offline-App ab Beta 1.8.4: Eingabe und Anzeige aller Daten, Schlüsselableitung für Passwort und Wiederherstellungs-Code, Ablage des Nutzersatzes im Gerätespeicher, Einbetten der App in fremde Seiten sowie das Einlesen von PDF-Abrechnungen."]],
+      [
+        "Anlass",
+        [
+          "Vorbereitung auf einen externen Penetrationstest. Eine eigene Prüfung ergab: Eingeschleustes HTML wurde bis zum nächsten Laden der App angezeigt, aber durch die Content-Security-Policy an der Ausführung gehindert. Weitere Punkte betreffen Stand der Technik und Härtung, nicht bekannte Angriffe.",
+        ],
+      ],
+      [
+        "Maßnahmen",
+        [
+          "Eingaben werden schon beim Tippen und Einfügen entschärft: Spitze Klammern sowie einfache und doppelte Anführungszeichen werden in jedem Textfeld sofort durch gleich aussehende, unschädliche Zeichen ersetzt. Eingeschleustes Markup kann dadurch zu keinem Zeitpunkt in die Oberfläche gelangen – auch nicht vor dem nächsten Laden der App. Die Content-Security-Policy, die fremde und eingebettete Skripte blockiert, bleibt als zweite Schutzschicht bestehen.",
+          "Schlüsselableitung verstärkt: PBKDF2-SHA-256 mit 600.000 statt 150.000 Iterationen (OWASP-Empfehlung 2023). Bestehende Zugänge werden beim nächsten Anmelden automatisch umgestellt; ältere Sicherungsdateien lassen sich weiterhin öffnen.",
+          "Name, Rolle und Teamliste liegen im Gerätespeicher jetzt ebenfalls verschlüsselt (AES-256-GCM mit dem Master Key). Unverschlüsselt bleiben nur DK-Nummer und die umschlossenen Schlüssel, die zum Anmelden nötig sind.",
+          "Schutz gegen Einbetten in fremde Seiten (Clickjacking): Wird die App in einem fremden Rahmen geöffnet, bleibt sie unsichtbar und startet nicht.",
+          "PDF-Leser aktualisiert auf pdf.js 6.4.299 (zuvor 3.11.174). Damit ist die Lücke CVE-2024-4367 auch in der Bibliothek selbst behoben; die Ausführung von Code aus PDF-Dateien bleibt zusätzlich abgeschaltet (isEvalSupported: false).",
+        ],
+      ],
+      [
+        "Hinweise",
+        [
+          "Die App wird während der Testphase über GitHub Pages ausgeliefert. Dort lassen sich HTTP-Sicherheitsheader (z. B. X-Frame-Options, frame-ancestors, Permissions-Policy) nicht frei setzen; die Content-Security-Policy ist als Meta-Angabe gesetzt, der Schutz gegen Einbetten im Code umgesetzt. Für den Regelbetrieb ist eine interne Adresse mit eigener Datenbank vorgesehen, auf der diese Header serverseitig gesetzt werden.",
+          "Für Nutzerinnen und Nutzer ändert sich nichts. Die erste Anmeldung nach dem Update dauert einmalig etwas länger.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.8.3",
     datum: "November 2026",
     kurz: "Verträgt sich mit Provisio Online",
