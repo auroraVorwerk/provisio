@@ -739,8 +739,25 @@
       seit: "1.8",
     },
     {
+      titel: "Kurz raus",
+      text: () =>
+        fensterOffen()
+          ? "Jemand will einen Termin? Tippe auf „Kurz raus“ – du landest im Planer und siehst deine Woche."
+          : "Tippe auf deinen Door-to-Door-Einsatz.",
+      ziel: fensterOder(() => d2dFeld()),
+      fertig: () => !!(window.d2dKurzRaus && window.d2dKurzRaus()) && !fensterOffen(),
+      seit: "1.8.2",
+    },
+    {
+      titel: "Zurück an die Tür",
+      text: "Termin vereinbart? Mit dem grünen Knopf bist du sofort wieder in deiner Strichliste.",
+      ziel: () => finde("#d2dZurueck"),
+      fertig: () => fensterOffen() && !document.getElementById("d2dZurueck"),
+      seit: "1.8.2",
+    },
+    {
       titel: "Einsatz schließen",
-      text: "Alles wird sofort gespeichert. Schließ das Fenster mit dem Kreuz.",
+      text: "„Kontakt merken“ legt einen Interessenten an, „Kein Kauf“ einen Eintrag in der Potenzialliste, „Verkauf erfassen“ führt durch Kundendaten und Nachbereitung. Alles wird sofort gespeichert – schließ das Fenster jetzt mit dem Kreuz.",
       ziel: () => (fensterOffen() ? finde("#sheet header .x") || $("#sheet") : null),
       fertig: () => !fensterOffen(),
       seit: "1.8",
@@ -828,7 +845,7 @@
   ]);
 
   /* ---------- Welche Schritte laufen: alles oder nur das Neue ---------- */
-  const STAND = "1.8"; // bei jedem Update mit neuen Funktionen anheben und Schritte mit seit: markieren
+  const STAND = "1.8.2"; // bei jedem Update mit neuen Funktionen anheben und Schritte mit seit: markieren
   const NEU_LISTE = [
     {
       ...info(
@@ -838,7 +855,7 @@
       kap: "Neu",
       zweit: ["Später", () => ueberspringen()],
     },
-    ...KAPITEL.filter((k) => k.seit === STAND),
+    /* gefüllt beim Start: alles, was seit dem letzten Stand dazukam */
     {
       titel: "Alles Neue gesehen",
       text: "Deine echten Daten wurden vorher gesichert. Tippe auf „Fertig“ – die Beispiele verschwinden und alles ist wie vorher.",
@@ -853,7 +870,12 @@
     for (let i = 0; i < Math.max(x.length, y.length); i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0);
     return false;
   };
-  const listeFuer = (modus) => (modus === "neu" ? NEU_LISTE : KAPITEL);
+  const listeFuer = (modus) => {
+    if (modus !== "neu") return KAPITEL;
+    const seit = settings.einfuehrungStand || "0";
+    const neu = KAPITEL.filter((k) => k.seit && aelter(seit, k.seit));
+    return [NEU_LISTE[0], ...neu, NEU_LISTE[NEU_LISTE.length - 1]];
+  };
 
   function snapLeer() {
     if (!T.snap) return true;
@@ -1101,6 +1123,15 @@
     if (!T.aktiv || T.geschafft) return;
     const st = LISTE[T.i];
     if (!st || st.info) return;
+    /* Vorschlagslisten der Suche überdecken sonst das nächste Ziel */
+    if (!(st.frei || []).includes("#invVorschlaege")) {
+      const v = document.getElementById("invVorschlaege");
+      if (v && !v.hidden && typeof invVorschlagZu === "function") {
+        invVorschlagZu();
+        const f = document.getElementById("invSuche");
+        if (f) f.blur();
+      }
+    }
     try {
       if (st.fertig && st.fertig(T.s)) return weiter();
       /* Bedingung verloren (Fenster zu, Termin gelöscht) → einen Schritt zurück */
@@ -1287,7 +1318,7 @@
     if (!settings.einfuehrungFertig && datenLeer()) return warteAufRuhe(() => starten(false, "voll"));
     /* Bestehende Nutzer: nach einem Update nur das Neue */
     const demoOhne = window.DEMO_AKTIV && !/demo=neu/.test(location.search);
-    if (!demoOhne && aelter(settings.einfuehrungStand || "0", STAND) && NEU_LISTE.length > 2) warteAufRuhe(() => starten(false, "neu"));
+    if (!demoOhne && aelter(settings.einfuehrungStand || "0", STAND) && listeFuer("neu").length > 2) warteAufRuhe(() => starten(false, "neu"));
   }
   /* Erst starten, wenn kein anderes Fenster (z. B. Wiederherstellungs-Code) offen ist */
   function warteAufRuhe(fn) {

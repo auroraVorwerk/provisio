@@ -130,7 +130,8 @@
   function abrechnungAuswerten(seite, dk) {
     const eigen = seite.reihen.find((r) => dkNorm(r.dk) === dkNorm(dk));
     const team = seite.reihen.filter((r) => dkNorm(r.dk) !== dkNorm(dk));
-    const einsteiger = team.filter((r) => istEinsteiger(r.eintritt, seite.bis));
+    /* Berufseinsteiger: alle Zeilen der Tabelle – die eigene zählt mit, wenn sie die Bedingung erfüllt */
+    const einsteiger = seite.reihen.filter((r) => istEinsteiger(r.eintritt, seite.bis));
     const teamNetto = seite.summeMitTL ? seite.summeMitTL.gesamt : seite.reihen.reduce((n, r) => n + r.gesamt, 0);
     return {
       von: seite.von,

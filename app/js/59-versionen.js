@@ -7,6 +7,21 @@
  */
 const VERSIONEN = [
   {
+    v: "Beta 1.8.2",
+    datum: "November 2026",
+    kurz: "Eigene Zeile als Berufseinsteiger, Door to Door in der Einführung",
+    teile: [
+      [
+        "Verbessert",
+        [
+          "PDF-Import: Auch deine eigene Zeile zählt zu „davon Berufseinsteiger“, wenn du am Abrechnungsende höchstens 52 Wochen dabei bist.",
+          "Einführung: Door to Door jetzt mit „Kurz raus“ und dem Weg zurück an die Tür.",
+          "Die Update-Tour zeigt alles, was seit deiner letzten Tour neu ist – auch wenn du eine Version übersprungen hast.",
+        ],
+      ],
+    ],
+  },
+  {
     v: "Beta 1.8",
     datum: "November 2026",
     kurz: "PDF-Abrechnung, Door to Door, Einführung als Spiel",
